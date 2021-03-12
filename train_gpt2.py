@@ -10,6 +10,7 @@ args = argparser.get_args()
 if __name__ == "__main__":
     
     trainer = pl.Trainer(
+        auto_scale_batch_size=True,
         gpus=GPUS,
         accelerator=ACCELERATOR,
         fast_dev_run=args.dev,
@@ -31,5 +32,6 @@ if __name__ == "__main__":
         model = Model.load_from_checkpoint(args.from_checkpoint)
 
     if args.run_test == False:
+        trainer.tune(model,datamodule=dm)
         trainer.fit(model,datamodule=dm)
     trainer.test(model)
