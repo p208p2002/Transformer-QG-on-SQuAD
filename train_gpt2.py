@@ -2,12 +2,13 @@ import pytorch_lightning as pl
 from models.gpt2 import argparser
 from models.gpt2.model import Model
 from models.gpt2.data_module import DataModule
-from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+from pytorch_lightning.callbacks import ModelCheckpoint
 from models.gpt2.config import GPUS,ACCELERATOR
 args = argparser.get_args()
 
 if __name__ == "__main__":
-
+    
     trainer = pl.Trainer(
         gpus=GPUS,
         accelerator=ACCELERATOR,
@@ -16,8 +17,8 @@ if __name__ == "__main__":
         default_root_dir='.log_gpt2',
         max_epochs=args.epoch,
         callbacks=[
-            EarlyStopping(monitor='dev_loss',patience=2),
-            ModelCheckpoint(monitor='dev_loss', filename='{epoch}-{dev_loss:.2f}',save_last=True)
+            EarlyStopping(monitor='dev_loss',patience=3),
+            ModelCheckpoint(monitor='dev_loss',filename='{epoch}-{dev_loss:.2f}',save_last=True),
         ]
     )
 
