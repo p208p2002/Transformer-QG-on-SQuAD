@@ -1,11 +1,17 @@
 # SQuAD HLSQG
 This project is a method reproduction of HLSQG with Transfomers model
+
 Original HLSQG is based on BERT and proposed by [Ying-Hong Chan & Yao-Chung Fan. (2019). A Re-current BERT-based Model for Question Generation.](https://www.aclweb.org/anthology/D19-5821/)
 The inputs of the model refers to 
 ```
 we integrate C and A into a new C' in the following form.
 C' = [c1, c2, ..., [HL], a1, ..., a|A|, [HL], ..., c|C|]
 ```
+
+Note that, the data split settings is not follow by the paper, the setting is follow
+- train: 87599	
+- validation: 10570
+
 
 ## Available Models
 - GPT2
