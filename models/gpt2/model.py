@@ -62,31 +62,32 @@ class Model(pl.LightningModule):
         assert len(sample_outputs) == num_return_sequences # 1
         sample_output = sample_outputs[0]        
         decode_question = self.tokenizer.decode(sample_output[input_ids_len:], skip_special_tokens=True)
-        scores = self.scorer.compute_score(decode_question,[ref_question])
+        score = self.scorer.compute_score(decode_question,[ref_question])
 
         # log
         log_dir = os.path.join(self.trainer.default_root_dir,'dev') if self.trainer.log_dir is None else self.trainer.log_dir
         os.makedirs(log_dir,exist_ok=True)
         with open(os.path.join(log_dir,'predict.jsonl'),'a',encoding='utf-8') as log_f:
-            log_f.write(json.dumps({"hyp":decode_question,"ref":ref_question,"scores":scores})+"\n")
+            for k in score.keys(): score[k] = str(score[k])
+            log_f.write(json.dumps({"hyp":decode_question,"ref":ref_question,"score":score})+"\n")
     
     def test_epoch_end(self, outputs):
-        sum_scores = {}
+        sum_score = {}
         log_dir = os.path.join(self.trainer.default_root_dir,'dev') if self.trainer.log_dir is None else self.trainer.log_dir
         with open(os.path.join(log_dir,'predict.jsonl'),'r',encoding='utf-8') as f:
             lines = f.readlines()
             for i,line in enumerate(lines):
                 line = json.loads(line)
-                data_socres = line['scores']                    
+                data_socres = line['score']                    
                 if i == 0:
                     for socre_key in data_socres.keys():
-                        sum_scores[socre_key] = 0.0 # init dict
+                        sum_score[socre_key] = 0.0 # init dict
                 for socre_key in data_socres.keys():
-                    sum_scores[socre_key] += float(data_socres[socre_key])
+                    sum_score[socre_key] += float(data_socres[socre_key])
         
         print('total data:',len(lines))
-        for key in sum_scores.keys():
-            print(key,sum_scores[key]/len(lines))
+        for key in sum_score.keys():
+            print(key,sum_score[key]/len(lines))
                 
     def configure_optimizers(self):
         return torch.optim.AdamW(self.parameters(), lr=args.lr)

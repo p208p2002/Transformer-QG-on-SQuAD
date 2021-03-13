@@ -40,7 +40,7 @@ if __name__ == "__main__":
         _use_model_path = None
     else:
         _use_model_path = last_model_path if best_model_path == "" else best_model_path
-        assert _use_model_path != ""
+        _use_model_path = None if _use_model_path == "" else _use_model_path
         print('use checkpoint',_use_model_path)
     trainer.test(model if args.run_test else None,datamodule=dm,ckpt_path=_use_model_path)
     
