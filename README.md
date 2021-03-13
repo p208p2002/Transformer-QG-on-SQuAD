@@ -12,7 +12,6 @@ Note that the data split settings is different with the paper, the setting is fo
 - train: 87599	
 - validation: 10570
 
-
 ## Available Models
 - GPT2
 - BART
