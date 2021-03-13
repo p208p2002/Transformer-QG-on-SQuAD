@@ -19,6 +19,8 @@ C' = [c1, c2, ..., [HL], a1, ..., a|A|, [HL], ..., c|C|]
 
 3. Setup scorer `python setup_scorer.py`
 
+4. The model and SQuAD dataset will automatic download in first time training
+
 ## How to run scripts
 ```
 python train_xxx.py --help
