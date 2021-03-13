@@ -17,7 +17,7 @@ if __name__ == "__main__":
         default_root_dir='.log_bart',
         max_epochs=args.epoch,
         callbacks=[
-            EarlyStopping(monitor='dev_loss',patience=2),
+            EarlyStopping(monitor='dev_loss',patience=3),
             ModelCheckpoint(monitor='dev_loss',filename='{epoch}-{dev_loss:.2f}',save_last=True),
         ]
     )
