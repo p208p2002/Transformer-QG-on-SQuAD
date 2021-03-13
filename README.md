@@ -1,5 +1,5 @@
 # SQuAD HLSQG
-This project is a method reproduction of HLSQG with Transfomers model
+This project is a method reproduction of HLSQG with Transfomer models
 
 Original HLSQG is based on BERT and proposed by [Ying-Hong Chan & Yao-Chung Fan. (2019). A Re-current BERT-based Model for Question Generation.](https://www.aclweb.org/anthology/D19-5821/)
 The inputs of the model refers to 
