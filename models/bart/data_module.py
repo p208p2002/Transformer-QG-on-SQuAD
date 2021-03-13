@@ -5,7 +5,7 @@ from .tokenizer import get_tokenizer
 from .argparser import get_args
 import pytorch_lightning as pl
 from datasets import load_dataset
-from .config import MODEL_CONFIG, MAX_INPUT_LENGTH, MAX_QUESTION_LENGTH, MAX_CONTEXT_LENGTH, HL_TOKEN
+from .config import MODEL_CONFIG, MAX_INPUT_LENGTH, MAX_QUESTION_LENGTH, HL_TOKEN
 import torch
 args = get_args()
 
@@ -28,38 +28,35 @@ class DataModule(pl.LightningDataModule):
         return DataLoader(self.test_dataset, batch_size=1, shuffle=False)
 
 class DatasetUtilsMixin():
-    def convert_to_tensor(self,model_input):
+     def prepare_input(self,context,label=None):
+        tokenizer = self.tokenizer
+        pad_token_id = tokenizer.pad_token_id
+        input_encodings = tokenizer(context, padding='max_length' if label is not None else False, max_length=MAX_INPUT_LENGTH, truncation=True, add_special_tokens=False)
+        
+        if label is not None:
+            labels = []
+            target_encodings = tokenizer(label, padding='max_length', max_length=MAX_INPUT_LENGTH, truncation=True, add_special_tokens=False)
+            for target_encoding_id in target_encodings['input_ids']:
+                if target_encoding_id != pad_token_id:
+                    labels.append(target_encoding_id)
+                else:
+                    labels.append(-100)
+        else:
+            labels = None
+
+        #   
+        model_input = {
+            'input_ids':input_encodings['input_ids'],
+            'attention_mask':input_encodings['attention_mask'],
+            'labels': labels
+        }
+        if label is None: del model_input['labels']
+
+        # convert to tensor
         for key in model_input.keys():
             model_input[key] = torch.LongTensor(model_input[key])
+
         return model_input
-
-    def prepare_input(self,context,label=None):
-        tokenizer = self.tokenizer
-        pad_token_id = self.tokenizer.pad_token_id
-
-        if label is None:
-            model_input = tokenizer(context,max_length=MAX_CONTEXT_LENGTH,truncation=True)
-            return self.convert_to_tensor(model_input)
-
-        context_input = tokenizer(context)
-        label_input = tokenizer(label)
-        
-        # limit context length
-        model_input = {}
-        model_input['input_ids'] = context_input['input_ids'][:MAX_CONTEXT_LENGTH] + label_input['input_ids'][:MAX_QUESTION_LENGTH]
-        
-        # prepars lables
-        model_input['labels'] = model_input['input_ids'][:]
-        for i,_ in enumerate(context_input['input_ids']):
-            model_input['labels'][i] = -100 # set the context part to -100 for ignore loss
-
-        # pad or limit to max length
-        pad_ids = [pad_token_id]*MAX_CONTEXT_LENGTH
-        pad_labels = [-100]*MAX_CONTEXT_LENGTH
-        model_input['input_ids'] = (model_input['input_ids'] + pad_ids)[:MAX_CONTEXT_LENGTH] 
-        model_input['labels'] = (model_input['labels'] + pad_labels)[:MAX_CONTEXT_LENGTH]        
-
-        return self.convert_to_tensor(model_input)
 
 class SquadQGDataset(Dataset,DatasetUtilsMixin):
     def __init__(self,split_set:str='train',tokenizer = get_tokenizer(args.base_model),is_test=False):
@@ -76,7 +73,7 @@ class SquadQGDataset(Dataset,DatasetUtilsMixin):
         
     def __getitem__(self,index):
         data = self.data[index]
-        # print(data['context'])
+        
         answer_text = data['answers']['text'][0]
         answer_len = len(answer_text)
         answer_start = data['answers']['answer_start'][0] 
@@ -84,10 +81,10 @@ class SquadQGDataset(Dataset,DatasetUtilsMixin):
 
         if self.is_test == False:
             model_input = self.prepare_input(context=hl_context,label=data['question'] + self.tokenizer.eos_token)
-            return model_input['input_ids'],model_input['labels'] 
+            return model_input['input_ids'],model_input['attention_mask'],model_input['labels'] 
         else:
             model_input = self.prepare_input(context=hl_context)
-            return model_input['input_ids'],data['question']
+            return model_input['input_ids'],model_input['attention_mask'],data['question']
         
     def __len__(self):
         return len(self.data)
