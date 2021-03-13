@@ -7,10 +7,19 @@ we integrate C and A into a new C' in the following form.
 C' = [c1, c2, ..., [HL], a1, ..., a|A|, [HL], ..., c|C|]
 ```
 
-## Available models
+## Available Models
 - GPT2
+- BART
 
-## Run scripts:
+## Install requirements
+1. If you don't have pytorch please install first
+> https://pytorch.org/get-started/locally/
+
+2. Install packages `pip install -Ur requirements`
+
+3. Setup scorer `python setup_scorer.py`
+
+## How to run scripts
 ```
 python train_xxx.py --help
 ```
