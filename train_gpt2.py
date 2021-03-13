@@ -8,9 +8,8 @@ from models.gpt2.config import GPUS,ACCELERATOR
 args = argparser.get_args()
 
 if __name__ == "__main__":
-    
+   
     trainer = pl.Trainer(
-        auto_scale_batch_size=True,
         gpus=GPUS,
         accelerator=ACCELERATOR,
         fast_dev_run=args.dev,
@@ -32,6 +31,12 @@ if __name__ == "__main__":
         model = Model.load_from_checkpoint(args.from_checkpoint)
 
     if args.run_test == False:
-        trainer.tune(model,datamodule=dm)
         trainer.fit(model,datamodule=dm)
-    trainer.test(model)
+
+    last_model_path = trainer.checkpoint_callback.last_model_path
+    best_model_path = trainer.checkpoint_callback.best_model_path
+    _use_model_path = last_model_path if best_model_path == "" else best_model_path
+    _use_model = model if args.run_test else None
+    print('use checkpoint:',_use_model_path)
+    trainer.test(_use_model,datamodule=dm,ckpt_path=_use_model_path)
+    
