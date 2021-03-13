@@ -83,10 +83,10 @@ class SquadQGDataset(Dataset,DatasetUtilsMixin):
         hl_context = data['context'][:answer_start] + HL_TOKEN + answer_text + HL_TOKEN + data['context'][answer_start + answer_len:]
 
         if self.is_test == False:
-            model_input = self.prepare_input(context=hl_context,label=data['question'] + self.tokenizer.eos_token)
+            model_input = self.prepare_input(context=hl_context + self.tokenizer.sep_token,label=data['question'] + self.tokenizer.eos_token)
             return model_input['input_ids'],model_input['labels'] 
         else:
-            model_input = self.prepare_input(context=hl_context)
+            model_input = self.prepare_input(context=hl_context + self.tokenizer.sep_token)
             return model_input['input_ids'],data['question']
         
     def __len__(self):
