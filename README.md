@@ -8,7 +8,7 @@ we integrate C and A into a new C' in the following form.
 C' = [c1, c2, ..., [HL], a1, ..., a|A|, [HL], ..., c|C|]
 ```
 
-Note that, the data split settings is not follow by the paper, the setting is follow
+Note that the data split settings is not follow by the paper, the setting is follow
 - train: 87599	
 - validation: 10570
 
