@@ -33,10 +33,14 @@ if __name__ == "__main__":
     if args.run_test == False:
         trainer.fit(model,datamodule=dm)
 
+    # select which ckpt to use
     last_model_path = trainer.checkpoint_callback.last_model_path
     best_model_path = trainer.checkpoint_callback.best_model_path
-    _use_model_path = last_model_path if best_model_path == "" else best_model_path
-    _use_model = model if args.run_test else None
-    print('use checkpoint:',_use_model_path)
-    trainer.test(_use_model,datamodule=dm,ckpt_path=_use_model_path)
+    if args.from_checkpoint is not None: # form checkpoint
+        _use_model_path = None
+    else:
+        _use_model_path = last_model_path if best_model_path == "" else best_model_path
+        assert _use_model_path != ""
+        print('use checkpoint',_use_model_path)
+    trainer.test(model if args.run_test else None,datamodule=dm,ckpt_path=_use_model_path)
     
