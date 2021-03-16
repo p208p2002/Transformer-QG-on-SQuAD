@@ -32,7 +32,7 @@ We report two dataset setting as Follow
 
 3. Setup scorer `python setup_scorer.py`
 
-4. The model and SQuAD dataset will automatic download in first time training
+4. Download dataset `python init_dataset.py`
 
 ## How to run scripts
 ```
