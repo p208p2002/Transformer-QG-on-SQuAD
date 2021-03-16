@@ -9,7 +9,7 @@ C' = [c1, c2, ..., [HL], a1, ..., a|A|, [HL], ..., c|C|]
 ```
 
 ## Data setting
-We report two dataset split setting as Follow
+We report two dataset setting as Follow
 
 ### SQuAD
 - train: 87599	
