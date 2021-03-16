@@ -8,9 +8,17 @@ we integrate C and A into a new C' in the following form.
 C' = [c1, c2, ..., [HL], a1, ..., a|A|, [HL], ..., c|C|]
 ```
 
-Note that the data split settings is different with the paper, the setting is follow
+## Data setting
+We report two dataset split setting as Follow
+
+### SQuAD
 - train: 87599	
 - validation: 10570
+
+### SQuAD 73K
+- train: 73240
+- dev: 11877
+- test: 11877
 
 ## Available Models
 - GPT2
