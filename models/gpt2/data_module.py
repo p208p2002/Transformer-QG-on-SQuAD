@@ -14,9 +14,14 @@ class DataModule(pl.LightningDataModule):
         super().__init__()
         self.batch_size = args.batch_size # set `batch_size` attr for auto-find batch size in pl
 
-        self.train_dataset = SquadQGDataset(split_set='train')
-        self.dev_dataset = SquadQGDataset(split_set='validation')
-        self.test_dataset = SquadQGDataset(split_set='validation',is_test=True)
+        if args.dataset == 'squad':
+            self.train_dataset = SquadQGDataset(split_set='train')
+            self.dev_dataset = SquadQGDataset(split_set='validation')
+            self.test_dataset = SquadQGDataset(split_set='validation',is_test=True)
+        elif args.dataset == 'squad73k':
+            self.train_dataset = SquadQG73KDataset(split_set='train')
+            self.dev_dataset = SquadQG73KDataset(split_set='validation')
+            self.test_dataset = SquadQG73KDataset(split_set='validation',is_test=True)
         
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True)
@@ -87,6 +92,59 @@ class SquadQGDataset(Dataset,DatasetUtilsMixin):
             return model_input['input_ids'],model_input['labels'] 
         else:
             model_input = self.prepare_input(context=hl_context + self.tokenizer.sep_token)
+            return model_input['input_ids'],data['question']
+        
+    def __len__(self):
+        return len(self.data)
+
+class SquadQG73KDataset(Dataset,DatasetUtilsMixin):
+    def __init__(self,split_set:str='train',tokenizer = get_tokenizer(args.base_model),is_test=False):
+        """
+        Args:
+            split_set(str): `train` or `validation`
+            tokenizer(transformers.PreTrainedTokenizer)
+        """
+        
+        if split_set == 'train':
+            with open('datasets/squad_73k/dev.json','r',encoding='utf-8') as f_dev, open('datasets/squad_73k/train.json','r',encoding='utf-8') as f_train:
+                dev_set = json.load(f_dev)
+                train_set = json.load(f_train)
+                self.data = dev_set + train_set
+        else:
+            with open('datasets/squad_73k/test.json','r',encoding='utf-8') as f_test:
+                test_set = json.load(f_test)
+                self.data = test_set
+        
+        # convert
+        new_data = []
+        for data in self.data:
+            for d in data['paragraphs']:
+                context = d['context']
+                for qa in d['qas']:
+                    new_data.append({
+                        'context':context,
+                        'answers':qa['answers'],
+                        'question':qa['question']
+                    })
+        
+        self.data = new_data
+        self.split_set = split_set
+        self.is_test = is_test
+        self.tokenizer = tokenizer
+        
+    def __getitem__(self,index):
+        data = self.data[index]
+        
+        answer_text = data['answers'][0]['text']
+        answer_len = len(answer_text)
+        answer_start = data['answers'][0]['answer_start']
+        hl_context = data['context'][:answer_start] + HL_TOKEN + answer_text + HL_TOKEN + data['context'][answer_start + answer_len:]
+
+        if self.is_test == False:
+            model_input = self.prepare_input(context=hl_context,label=data['question'] + self.tokenizer.eos_token)
+            return model_input['input_ids'],model_input['labels'] 
+        else:
+            model_input = self.prepare_input(context=hl_context)
             return model_input['input_ids'],data['question']
         
     def __len__(self):
