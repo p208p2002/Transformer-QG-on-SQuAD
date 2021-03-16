@@ -18,10 +18,10 @@ class DataModule(pl.LightningDataModule):
             self.train_dataset = SquadQGDataset(split_set='train')
             self.dev_dataset = SquadQGDataset(split_set='validation')
             self.test_dataset = SquadQGDataset(split_set='validation',is_test=True)
-        elif args.dataset == 'squad73k':
-            self.train_dataset = SquadQG73KDataset(split_set='train')
-            self.dev_dataset = SquadQG73KDataset(split_set='validation')
-            self.test_dataset = SquadQG73KDataset(split_set='validation',is_test=True)
+        elif args.dataset == 'squad-nqg':
+            self.train_dataset = SquadNQGDataset(split_set='train')
+            self.dev_dataset = SquadNQGDataset(split_set='dev')
+            self.test_dataset = SquadNQGDataset(split_set='test',is_test=True)
         
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True)
@@ -97,21 +97,24 @@ class SquadQGDataset(Dataset,DatasetUtilsMixin):
     def __len__(self):
         return len(self.data)
 
-class SquadQG73KDataset(Dataset,DatasetUtilsMixin):
+class SquadNQGDataset(Dataset,DatasetUtilsMixin):
     def __init__(self,split_set:str='train',tokenizer = get_tokenizer(args.base_model),is_test=False):
         """
         Args:
-            split_set(str): `train` or `validation`
+            split_set(str): `train`, `dev` or `test`
             tokenizer(transformers.PreTrainedTokenizer)
         """
         
         if split_set == 'train':
-            with open('datasets/squad_73k/dev.json','r',encoding='utf-8') as f_dev, open('datasets/squad_73k/train.json','r',encoding='utf-8') as f_train:
-                dev_set = json.load(f_dev)
+            with open('datasets/squad-nqg/train.json','r',encoding='utf-8') as f_train:
                 train_set = json.load(f_train)
-                self.data = dev_set + train_set
-        else:
-            with open('datasets/squad_73k/test.json','r',encoding='utf-8') as f_test:
+                self.data = train_set
+        elif split_set == 'dev':
+            with open('datasets/squad-nqg/dev.json','r',encoding='utf-8') as f_dev:
+                dev_set = json.load(f_dev)
+                self.data = dev_set
+        elif split_set == 'test':
+            with open('datasets/squad-nqg/test.json','r',encoding='utf-8') as f_test:
                 test_set = json.load(f_test)
                 self.data = test_set
         

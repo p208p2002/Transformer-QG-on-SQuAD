@@ -15,9 +15,9 @@ We report two dataset setting as Follow
 - train: 87599	
 - validation: 10570
 
-### SQuAD 73K
-- train: 73240
-- dev: 11877
+### SQuAD NQG
+- train: 75722
+- dev: 10570
 - test: 11877
 
 ## Available Models
