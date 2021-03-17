@@ -40,7 +40,7 @@ class DatasetUtilsMixin():
         
         if label is not None:
             labels = []
-            target_encodings = tokenizer(label, padding='max_length', max_length=MAX_INPUT_LENGTH, truncation=True, add_special_tokens=False)
+            target_encodings = tokenizer(label, padding='max_length', max_length=MAX_QUESTION_LENGTH, truncation=True, add_special_tokens=False)
             for target_encoding_id in target_encodings['input_ids']:
                 if target_encoding_id != pad_token_id:
                     labels.append(target_encoding_id)
