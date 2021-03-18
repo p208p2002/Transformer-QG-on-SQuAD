@@ -55,14 +55,14 @@ class DatasetUtilsMixin():
         
         # prepars lables
         model_input['labels'] = model_input['input_ids'][:]
-        for i,_ in enumerate(context_input['input_ids']):
+        for i,_ in enumerate(context_input['input_ids'][:MAX_CONTEXT_LENGTH]):
             model_input['labels'][i] = -100 # set the context part to -100 for ignore loss
 
         # pad or limit to max length
-        pad_ids = [pad_token_id]*MAX_CONTEXT_LENGTH
-        pad_labels = [-100]*MAX_CONTEXT_LENGTH
-        model_input['input_ids'] = (model_input['input_ids'] + pad_ids)[:MAX_CONTEXT_LENGTH] 
-        model_input['labels'] = (model_input['labels'] + pad_labels)[:MAX_CONTEXT_LENGTH]        
+        pad_ids = [pad_token_id]*MAX_INPUT_LENGTH
+        pad_labels = [-100]*MAX_INPUT_LENGTH
+        model_input['input_ids'] = (model_input['input_ids'] + pad_ids)[:MAX_INPUT_LENGTH] 
+        model_input['labels'] = (model_input['labels'] + pad_labels)[:MAX_INPUT_LENGTH]        
 
         return self.convert_to_tensor(model_input)
 
