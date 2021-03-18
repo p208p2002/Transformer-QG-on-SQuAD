@@ -33,16 +33,32 @@ We report two dataset setting as Follow
 4. Download dataset `python init_dataset.py`
 
 ## Training
+### BART
 ```
-python train_xxx.py --help
-
-usage: train_xxx.py [-h] [--base_model BASE_MODEL] [-d {squad,squad-nqg}]
-                     [--epoch EPOCH] [--lr LR] [--dev DEV] [--run_test]
-                     [-fc FROM_CHECKPOINT]
+usage: train_bart.py [-h]
+                     [--base_model {facebook/bart-base,facebook/bart-large}]
+                     [-d {squad,squad-nqg}] [--epoch EPOCH] [--lr LR]
+                     [--dev DEV] [--run_test] [-fc FROM_CHECKPOINT]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --base_model BASE_MODEL
+  --base_model {facebook/bart-base,facebook/bart-large}
+  -d {squad,squad-nqg}, --dataset {squad,squad-nqg}
+  --epoch EPOCH
+  --lr LR
+  --dev DEV
+  --run_test
+  -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
+```
+### GPT2
+```
+usage: train_gpt2.py [-h] [--base_model {gpt2,gpt2-large}]
+                     [-d {squad,squad-nqg}] [--epoch EPOCH] [--lr LR]
+                     [--dev DEV] [--run_test] [-fc FROM_CHECKPOINT]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --base_model {gpt2,gpt2-large}
   -d {squad,squad-nqg}, --dataset {squad,squad-nqg}
   --epoch EPOCH
   --lr LR
