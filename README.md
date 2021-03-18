@@ -34,7 +34,22 @@ We report two dataset setting as Follow
 
 4. Download dataset `python init_dataset.py`
 
-## How to run scripts
+## Training
 ```
 python train_xxx.py --help
+
+usage: train_xxx.py [-h] [--base_model BASE_MODEL] [-d {squad,squad-nqg}]
+                     [--batch_size BATCH_SIZE] [--epoch EPOCH] [--lr LR]
+                     [--dev DEV] [--run_test] [-fc FROM_CHECKPOINT]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --base_model BASE_MODEL
+  -d {squad,squad-nqg}, --dataset {squad,squad-nqg}
+  --batch_size BATCH_SIZE
+  --epoch EPOCH
+  --lr LR
+  --dev DEV
+  --run_test
+  -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
 ```
