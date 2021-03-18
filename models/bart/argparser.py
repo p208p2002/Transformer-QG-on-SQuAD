@@ -2,7 +2,7 @@ import argparse
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--base_model',default='facebook/bart-base',type=str)
+    parser.add_argument('--base_model',default='facebook/bart-base',choices=['facebook/bart-base','facebook/bart-large'],type=str)
     parser.add_argument('-d','--dataset',default='squad',choices=['squad','squad-nqg'],type=str)
     parser.add_argument('--epoch',default=10,type=int)
     parser.add_argument('--lr',type=float,default=5e-5)
