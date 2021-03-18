@@ -26,7 +26,7 @@ We report two dataset setting as Follow
 1. If you don't have pytorch please install first
 > https://pytorch.org/get-started/locally/
 
-2. Install packages `pip install -r requirements`
+2. Install packages `pip install -r requirements.txt`
 
 3. Setup scorer `python setup_scorer.py`
 
