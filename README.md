@@ -1,12 +1,10 @@
 # Transformer QG on SQuAD
-This project is a method reproduction of HLSQG with Transfomer models
-
-Original HLSQG is based on BERT and proposed by [Ying-Hong Chan & Yao-Chung Fan. (2019). A Re-current BERT-based Model for Question Generation.](https://www.aclweb.org/anthology/D19-5821/)
 The inputs of the model refers to 
 ```
 we integrate C and A into a new C' in the following form.
 C' = [c1, c2, ..., [HL], a1, ..., a|A|, [HL], ..., c|C|]
 ```
+> Proposed by [Ying-Hong Chan & Yao-Chung Fan. (2019). A Re-current BERT-based Model for Question Generation.](https://www.aclweb.org/anthology/D19-5821/)
 
 ## Data setting
 We report two dataset setting as Follow
