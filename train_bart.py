@@ -8,7 +8,7 @@ from models.bart.config import GPUS,ACCELERATOR
 args = argparser.get_args()
 
 if __name__ == "__main__":
-   
+    # trainer config
     trainer = pl.Trainer(
         gpus=GPUS,
         accelerator=ACCELERATOR,
@@ -21,26 +21,31 @@ if __name__ == "__main__":
             ModelCheckpoint(monitor='dev_loss',filename='{epoch}-{dev_loss:.2f}',save_last=True),
         ]
     )
-
+    
+    # DataModule
     dm = DataModule()
 
+    # from_checkpoint
     if args.from_checkpoint is None:
         model = Model()
     else:
         print('load from checkpoint')
         model = Model.load_from_checkpoint(args.from_checkpoint)
-
+    
+    # train
     if args.run_test == False:
         trainer.fit(model,datamodule=dm)
 
-    # select which ckpt to use
+    # run_test
     last_model_path = trainer.checkpoint_callback.last_model_path
     best_model_path = trainer.checkpoint_callback.best_model_path
-    if args.from_checkpoint is not None: # form checkpoint
-        _use_model_path = None
-    else:
-        _use_model_path = last_model_path if best_model_path == "" else best_model_path
-        _use_model_path = None if _use_model_path == "" else _use_model_path
-        print('use checkpoint',_use_model_path)
-    trainer.test(model if args.run_test else None,datamodule=dm,ckpt_path=_use_model_path)
+    _use_model_path = last_model_path if best_model_path == "" else best_model_path
+    print('use checkpoint:',_use_model_path)
+    trainer.test(
+            model=model if _use_model_path == "" else None,
+            datamodule=dm,
+            ckpt_path=_use_model_path
+        )
+        
+    
     
