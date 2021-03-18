@@ -12,7 +12,7 @@ args = get_args()
 class DataModule(pl.LightningDataModule):
     def __init__(self,args = get_args()):
         super().__init__()
-        self.batch_size = args.batch_size # set `batch_size` attr for auto-find batch size in pl
+        self.batch_size = 1
 
         if args.dataset == 'squad':
             self.train_dataset = SquadQGDataset(split_set='train')
