@@ -20,7 +20,7 @@ We report two dataset setting as Follow
 - dev: 10570
 - test: 11877
 
-## Available Models
+## Available models
 - GPT2
 - BART
 
