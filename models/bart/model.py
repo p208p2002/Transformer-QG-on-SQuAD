@@ -12,8 +12,9 @@ args = get_args()
 
 
 class Model(pl.LightningModule,ModelEvalMixin):
-    def __init__(self):
+    def __init__(self,args=args):
         super().__init__()
+        self.save_hyperparameters(args)
         self.tokenizer = get_tokenizer(args.base_model)
         self.model = AutoModelForSeq2SeqLM.from_pretrained(args.base_model)
         self.model.resize_token_embeddings(len(self.tokenizer))
