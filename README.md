@@ -26,7 +26,7 @@ We report two dataset setting as Follow
 - T5
 
 ## Install requirements
-1. If you don't have pytorch please install first
+1. If you don't have pytorch 1.6+ please install or update first
 > https://pytorch.org/get-started/locally/
 
 2. Install packages `pip install -r requirements.txt`
@@ -34,6 +34,8 @@ We report two dataset setting as Follow
 3. Setup scorer `python setup_scorer.py`
 
 4. Download dataset `python init_dataset.py`
+
+> It's recommend to run script with my pre-build docker image - [docker-for-ai-dev](https://github.com/p208p2002/docker-for-ai-dev)
 
 ## Training
 ### Seq2Seq LM
