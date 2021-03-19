@@ -1,28 +1,28 @@
 import pytorch_lightning as pl
-from models.gpt2 import argparser
-from models.gpt2.model import Model
-from models.gpt2.data_module import DataModule
+from models.seq2seq_lm import argparser
+from models.seq2seq_lm.model import Model
+from models.seq2seq_lm.data_module import DataModule
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.callbacks import ModelCheckpoint
-from models.gpt2.config import GPUS,ACCELERATOR
+from models.seq2seq_lm.config import GPUS,ACCELERATOR
 from copy import deepcopy
 args = argparser.get_args()
 
 if __name__ == "__main__":
-   
+    # trainer config
     trainer = pl.Trainer(
         gpus=GPUS,
         accelerator=ACCELERATOR,
         fast_dev_run=args.dev,
         precision=32,
-        default_root_dir='.log_gpt2',
+        default_root_dir='.log_seq2seq_lm',
         max_epochs=args.epoch,
         callbacks=[
             EarlyStopping(monitor='dev_loss',patience=3),
             ModelCheckpoint(monitor='dev_loss',filename='{epoch}-{dev_loss:.2f}',save_last=True),
         ]
     )
-
+    
     # DataModule
     dm = DataModule()
 
@@ -50,4 +50,6 @@ if __name__ == "__main__":
             datamodule=dm,
             ckpt_path=_use_model_path
         )
+        
+    
     

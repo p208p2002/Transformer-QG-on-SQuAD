@@ -12,15 +12,18 @@ We report two dataset setting as Follow
 ### SQuAD
 - train: 87599	
 - validation: 10570
+> [SQuAD: 100,000+ Questions for Machine Comprehension of Text](https://arxiv.org/abs/1606.05250)
 
 ### SQuAD NQG
 - train: 75722
 - dev: 10570
 - test: 11877
+> [Learning to Ask: Neural Question Generation for Reading Comprehension](https://arxiv.org/abs/1705.00106)
 
 ## Available models
 - GPT2
 - BART
+- T5
 
 ## Install requirements
 1. If you don't have pytorch please install first
@@ -33,16 +36,16 @@ We report two dataset setting as Follow
 4. Download dataset `python init_dataset.py`
 
 ## Training
-### BART
+### Seq2Seq LM
 ```
-usage: train_bart.py [-h]
-                     [--base_model {facebook/bart-base,facebook/bart-large}]
-                     [-d {squad,squad-nqg}] [--epoch EPOCH] [--lr LR]
-                     [--dev DEV] [--run_test] [-fc FROM_CHECKPOINT]
+usage: train_seq2seq_lm.py [-h]
+                           [--base_model {facebook/bart-base,facebook/bart-large,t5-small,t5-base,t5-large}]
+                           [-d {squad,squad-nqg}] [--epoch EPOCH] [--lr LR]
+                           [--dev DEV] [--run_test] [-fc FROM_CHECKPOINT]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --base_model {facebook/bart-base,facebook/bart-large}
+  --base_model {facebook/bart-base,facebook/bart-large,t5-small,t5-base,t5-large}
   -d {squad,squad-nqg}, --dataset {squad,squad-nqg}
   --epoch EPOCH
   --lr LR
@@ -50,11 +53,11 @@ optional arguments:
   --run_test
   -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
 ```
-### GPT2
+### Causal LM
 ```
-usage: train_gpt2.py [-h] [--base_model {gpt2,gpt2-large}]
-                     [-d {squad,squad-nqg}] [--epoch EPOCH] [--lr LR]
-                     [--dev DEV] [--run_test] [-fc FROM_CHECKPOINT]
+usage: train_causal_lm.py [-h] [--base_model {gpt2,gpt2-large}]
+                          [-d {squad,squad-nqg}] [--epoch EPOCH] [--lr LR]
+                          [--dev DEV] [--run_test] [-fc FROM_CHECKPOINT]
 
 optional arguments:
   -h, --help            show this help message and exit
