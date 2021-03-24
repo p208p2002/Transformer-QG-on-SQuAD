@@ -6,7 +6,7 @@ import torch
 import re
 import os
 import json
-from .config import MAX_CONTEXT_LENGTH
+from .config import MAX_INPUT_LENGTH
 from utils import ModelEvalMixin
 args = get_args()
 
@@ -43,14 +43,13 @@ class Model(pl.LightningModule,ModelEvalMixin):
         num_return_sequences = 1
         sample_outputs = self.model.generate(
             input_ids = input_ids,
-            max_length=MAX_CONTEXT_LENGTH,
+            max_length=MAX_INPUT_LENGTH,
             early_stopping=True,
             temperature=0.85,
             do_sample=True,
             top_p=0.9,
             top_k=10,
             num_beams=3,
-            no_repeat_ngram_size=5,
             num_return_sequences=num_return_sequences,
             pad_token_id = self.tokenizer.pad_token_id,
             eos_token_id = self.tokenizer.eos_token_id
