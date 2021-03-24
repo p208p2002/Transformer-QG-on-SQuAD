@@ -48,9 +48,9 @@ BART-HLSQG|33.34 |22.86 |14.99 |9.67  |25.53 |38.20  |
 
 2. Install packages `pip install -r requirements.txt`
 
-3. Setup scorer `python setup_scorer.py`
+3. Setup scorer `python setup_scorer.py && python setup_nqg_scorer.py`
 
-4. Download dataset `python init_dataset.py`
+5. Download dataset `python init_dataset.py`
 
 > It's recommend to run script with my pre-build docker image - [docker-for-ai-dev](https://github.com/p208p2002/docker-for-ai-dev)
 
