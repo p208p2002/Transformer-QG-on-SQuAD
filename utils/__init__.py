@@ -53,7 +53,7 @@ class ModelEvalMixin():
             decode_question = re.sub(' "','``',decode_question)
             decode_question = re.sub('"',"''",decode_question)
             decode_question = decode_question.replace('``',' `` ')
-            decode_question = decode_question.replace("''"," '' ")
+            decode_question = decode_question.replace("''"," ''")
             log_f.write(decode_question+"\n")
         
     def evaluate_predict(self,dataset):
