@@ -12,9 +12,9 @@ args = get_args()
 
 
 class Model(pl.LightningModule,ModelEvalMixin):
-    def __init__(self,args=args):
+    def __init__(self):
         super().__init__()
-        self.save_hyperparameters(args)
+        # self.save_hyperparameters(args)
         self.tokenizer = get_tokenizer(args.base_model)
         self.model = AutoModelForCausalLM.from_pretrained(args.base_model)
         self.model.resize_token_embeddings(len(self.tokenizer))
