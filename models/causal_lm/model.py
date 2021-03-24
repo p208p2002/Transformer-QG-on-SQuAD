@@ -59,15 +59,10 @@ class Model(pl.LightningModule,ModelEvalMixin):
         assert len(sample_outputs) == num_return_sequences # 1
         sample_output = sample_outputs[0]        
         decode_question = self.tokenizer.decode(sample_output[input_ids_len:], skip_special_tokens=True)
-        
-        # log
-        log_dir = os.path.join(self.trainer.default_root_dir,'dev') if self.trainer.log_dir is None else self.trainer.log_dir
-        os.makedirs(log_dir,exist_ok=True)
-        with open(os.path.join(log_dir,'predict.jsonl'),'a',encoding='utf-8') as log_f:
-            log_f.write(json.dumps({"hyp":decode_question,"ref":ref_question})+"\n")
-    
-    def test_epoch_end(self, outputs):
-        ModelEvalMixin.test_epoch_end(self, outputs)
+        self.write_predict(decode_question,ref_question)
+
+    def test_epoch_end(self,outputs):
+        self.evaluate_predict(dataset=args.dataset)
     
     def configure_optimizers(self):
         return torch.optim.AdamW(self.parameters(), lr=args.lr)

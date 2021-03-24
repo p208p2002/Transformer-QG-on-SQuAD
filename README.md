@@ -26,15 +26,20 @@ We report two dataset setting as Follow
 - T5
 
 ## Expriments
-### BART
-```
-Bleu_1: 0.54124
-Bleu_2: 0.38191
-Bleu_3: 0.28849
-Bleu_4: 0.22353
-METEOR: 0.24554
-ROUGE_L: 0.51032
-```
+`NQG Scorer` using in SQuAD NQG which has special evaluation method.
+For `Our Scorer`, we direct use the label and compute the scores without any modify.
+### SQuAD
+comming soon...
+### SQuAD NQG
+#### NQG Scorer
+Model     |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
+----------|------|------|------|------|------|-------|
+BART-HLSQG|54.12 |38.19 |28.84 |22.35 |24.55 |51.03  |
+#### Our Scorer
+Model     |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
+----------|------|------|------|------|------|-------|
+BART-HLSQG|33.34 |22.86 |14.99 |9.67  |25.53 |38.20  |
+
 
 ## Install requirements
 1. If you don't have pytorch 1.6+ please install or update first
