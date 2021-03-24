@@ -25,6 +25,17 @@ We report two dataset setting as Follow
 - BART
 - T5
 
+## Expriments
+### BART
+```
+Bleu_1: 0.54124
+Bleu_2: 0.38191
+Bleu_3: 0.28849
+Bleu_4: 0.22353
+METEOR: 0.24554
+ROUGE_L: 0.51032
+```
+
 ## Install requirements
 1. If you don't have pytorch 1.6+ please install or update first
 > https://pytorch.org/get-started/locally/
