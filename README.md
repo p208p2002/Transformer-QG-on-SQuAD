@@ -32,8 +32,9 @@ For `Our Scorer`, we direct use the label and compute the scores without any mod
 comming soon...
 ### SQuAD NQG
 #### NQG Scorer
-Model     |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
-----------|------|------|------|------|------|-------|
+Model                            |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
+---------------------------------|------|------|------|------|------|-------|
+BERT-HLSQG (Chan et al.)|48.29 |33.12 |24.78 |19.14 |22.89 |47.07  |
 BART-HLSQG|54.12 |38.19 |28.84 |22.35 |24.55 |51.03  |
 #### Our Scorer
 Model     |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
