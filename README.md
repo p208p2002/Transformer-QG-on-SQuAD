@@ -27,7 +27,7 @@ We report two dataset setting as Follow
 
 ## Expriments
 `NQG Scorer` using in SQuAD NQG which has special evaluation method.
-For `Our Scorer`, we direct use the label and compute the scores without any modify.
+For `Our Scorer`, we direct use the gold label and compute the scores without any modify.
 ### SQuAD
 comming soon...
 ### SQuAD NQG
