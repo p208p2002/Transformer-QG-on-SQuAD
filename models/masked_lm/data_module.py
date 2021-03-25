@@ -60,7 +60,7 @@ class DatasetUtilsMixin():
         model_input['labels'] = [-100]*len(model_input['input_ids'][:])
         model_input['labels'][-1] = label_id
 
-        pad or limit to max length
+        # pad or limit to max length
         pad_ids = [pad_token_id]*MAX_INPUT_LENGTH
         pad_labels = [-100]*MAX_INPUT_LENGTH
         model_input['input_ids'] = (model_input['input_ids'] + pad_ids)[:MAX_INPUT_LENGTH] 
