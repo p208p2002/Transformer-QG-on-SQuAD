@@ -27,7 +27,9 @@ We report two dataset setting as Follow
 
 ## Expriments
 `NQG Scorer` which using in SQuAD NQG, has a [special pre-porcessing](https://github.com/xinyadu/nqg/issues/21) action before evaluation.
-For `Our Scorer`, we direct use the gold label and compute the scores without any modify.
+For `Our Scorer`, we first `lower()` and `tokenize()` in glod labels and predcit sentences, then we evaluation.
+> see `utils/scorer.py` for implement detail
+
 ### SQuAD
 comming soon...
 ### SQuAD NQG
@@ -39,10 +41,13 @@ BART-HLSQG                       |54.12 |38.19 |28.84 |22.35 |24.55 |51.03  |
 GPT2-HLSQG                       |49.82 |33.69 |24.71 |18.63 |21.90 |47.60  |
 
 #### Our Scorer
+comming soon...
+<!-- 
 Model     |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
 ----------|------|------|------|------|------|-------|
 BART-HLSQG|33.34 |22.86 |14.99 |9.67  |25.53 |38.20  |
 GPT2-HLSQG|30.46 |19.17 |12.00 |7.36  |22.55 |34.53  |
+ -->
 
 
 ## Install requirements

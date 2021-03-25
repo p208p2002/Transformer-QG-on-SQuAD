@@ -2,25 +2,6 @@ import json
 import re
 import os
 from .scorer import Scorer
-# class Scorer():
-#     def __init__(self):
-#         print("loading NLGEval...",end="\r")
-#         self.nlgeval = NLGEval(no_glove=True,no_skipthoughts=True)  # loads the models
-#         print("loading NLGEval...finish")
-#         print("loading BERTScorer...",end="\r")
-#         self.bert_scorer = BERTScorer(lang="en")
-#         print("loading BERTScorer...finish")
-
-#     def compute_score(self,hyp,refs):
-#         # token scores    
-#         score = self.nlgeval.compute_individual_metrics(hyp=hyp, ref=refs)
-#         del score['CIDEr']
-
-#         # bert score
-#         bP, bR, bF1 = self.bert_scorer.score([hyp], [refs])
-#         score['BertScore'] = bF1.item() if bF1.item() > 0.0 else 0.0
-
-#         return score
     
 class ModelEvalMixin():
     def write_predict(self, decode_question, ref_question):
