@@ -29,14 +29,26 @@ We report two dataset setting as Follow
 `NQG Scorer` which using in SQuAD NQG, has a [special pre-porcessing](https://github.com/xinyadu/nqg/issues/21) action before evaluation.
 For `Our Scorer`, we first `lower()` and `tokenize()` in glod labels and predcit sentences, then we evaluation.
 > see `utils/scorer.py` for implement detail
-
+<!--
 ### SQuAD
-comming soon...
+#### NQG Scorer
+Model                            |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
+---------------------------------|------|------|------|------|------|-------|
+BERT-HLSQG (ours)|
+BART-HLSQG                       |54.67 |39.26 |30.34 |24.15 |25.43 |52.64  |
+#### Our Scorer
+Model                            |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
+---------------------------------|------|------|------|------|------|-------|
+BERT-HLSQG (ours)|
+BART-HLSQG                       |54.67 |39.26 |30.34 |24.15 |25.43 |52.64  |
+-->
 ### SQuAD NQG
 #### NQG Scorer
 Model                            |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
 ---------------------------------|------|------|------|------|------|-------|
 BERT-HLSQG (Chan et al.)         |49.73 |34.60 |26.13 |20.33 |23.88 |48.23  |
+BERT-HLSQG (ours)|
+RoBERTa-HLSQG|
 BART-HLSQG                       |54.12 |38.19 |28.84 |22.35 |24.55 |51.03  |
 GPT2-HLSQG                       |49.82 |33.69 |24.71 |18.63 |21.90 |47.60  |
 
@@ -45,7 +57,6 @@ GPT2-HLSQG                       |49.82 |33.69 |24.71 |18.63 |21.90 |47.60  |
 Model     |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
 ----------|------|------|------|------|------|-------|
 BART-HLSQG|44.27 |28.01 |18.72 |12.38 |25.70 |48.23  |
-GPT2-HLSQG|30.46 |19.17 |12.00 |7.36  |22.55 |34.53  |
 -->
 
 
