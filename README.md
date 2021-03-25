@@ -26,7 +26,7 @@ We report two dataset setting as Follow
 - T5
 
 ## Expriments
-`NQG Scorer` which using in SQuAD NQG, has a pre-porcessing action before evaluation.
+`NQG Scorer` which using in SQuAD NQG, has a [special pre-porcessing](https://github.com/xinyadu/nqg/issues/21) action before evaluation.
 For `Our Scorer`, we direct use the gold label and compute the scores without any modify.
 ### SQuAD
 comming soon...

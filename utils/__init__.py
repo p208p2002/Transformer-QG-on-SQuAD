@@ -39,7 +39,7 @@ class ModelEvalMixin():
 
         # write log for my scorer
         with open(os.path.join(log_dir,'predict.jsonl'),'a',encoding='utf-8') as log_f:
-            log_f.write(json.dumps({"hyp":decode_question,"ref":ref_question})+"\n")
+            log_f.write(json.dumps({"hyp":decode_question,"ref":ref_question},ensure_ascii=False)+"\n")
 
         # write log for nqg scorer
         with open(os.path.join(log_dir,'predict_for_nqg_scorer.txt'),'a',encoding='utf-8') as log_f:
@@ -70,7 +70,7 @@ class ModelEvalMixin():
                 score = scorer.compute_score(hyp,[ref])
                 for k in score.keys(): score[k] = str(score[k])
                 line['score'] = score
-                score_f.write(json.dumps(line)+"\n")
+                score_f.write(json.dumps(line,ensure_ascii=False)+"\n")
 
         # sum score
         sum_score = {}
