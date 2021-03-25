@@ -21,6 +21,7 @@ class Scorer():
         return tokenize_sentence
         
     def add(self,hyp,refs):
+        refs = refs[:]
         if self.preprocess:
             hyp = self._preprocess(hyp)
             refs = [self._preprocess(ref) for ref in refs]
