@@ -34,13 +34,13 @@ class Model(pl.LightningModule,ModelEvalMixin):
         outputs = self(batch[0],batch[1])
         
         loss = outputs['loss']
-        self.log_dict({'loss':loss.item()},prog_bar=True)
         self.manual_backward(loss)
 
         # accumulate gradient batches
         if batch_idx % self.accumulation_steps == 0:
             opt.step()
             opt.zero_grad()
+            self.log_dict({'loss':loss.item()},prog_bar=True)
         
     def validation_step(self, batch, batch_idx):
         outputs = self(batch[0],batch[1])
