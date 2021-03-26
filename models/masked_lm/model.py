@@ -29,7 +29,7 @@ class Model(pl.LightningModule,ModelEvalMixin):
         return self.model(input_ids=input_ids,labels=labels,return_dict=True)
     
     def training_step(self, batch, batch_idx):
-        opt = self.optimizers()
+        opt = self.optimizers(use_pl_optimizer=False)
         
         outputs = self(batch[0],batch[1])
         
