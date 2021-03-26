@@ -21,9 +21,9 @@ class DataModule(pl.LightningDataModule):
             self.dev_dataset = SquadQGDataset(split_set='validation')
             self.test_dataset = SquadQGDataset(split_set='validation',is_test=True)
         elif args.dataset == 'squad-nqg':
-            self.train_dataset = SquadNQGDataset(split_set='dev')
+            self.train_dataset = SquadNQGDataset(split_set='train')
             self.dev_dataset = SquadNQGDataset(split_set='dev')
-            self.test_dataset = SquadNQGDataset(split_set='dev',is_test=True)
+            self.test_dataset = SquadNQGDataset(split_set='test',is_test=True)
         
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True)

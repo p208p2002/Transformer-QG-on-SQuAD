@@ -36,6 +36,7 @@ if __name__ == "__main__":
     
     # train
     if args.run_test == False:
+        model.zero_grad()
         trainer.fit(model,datamodule=dm)
 
     # run_test
