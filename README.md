@@ -119,14 +119,14 @@ optional arguments:
 ### Masked LM
 ```
 usage: train_masked_lm.py [-h]
-                          [--base_model {bert-base-uncased,bert-large-uncased}]
+                          [--base_model {bert-base-uncased,bert-large-uncased,roberta-base,roberta-large,albert-base-v1,albert-large-v1,albert-base-v2,albert-large-v2}]
                           [-d {squad,squad-nqg}] [--batch_size BATCH_SIZE]
                           [--epoch EPOCH] [--lr LR] [--dev DEV] [--run_test]
                           [-fc FROM_CHECKPOINT]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --base_model {bert-base-uncased,bert-large-uncased}
+  --base_model {bert-base-uncased,bert-large-uncased,roberta-base,roberta-large,albert-base-v1,albert-large-v1,albert-base-v2,albert-large-v2}
   -d {squad,squad-nqg}, --dataset {squad,squad-nqg}
   --batch_size BATCH_SIZE
   --epoch EPOCH

@@ -26,10 +26,10 @@ class DataModule(pl.LightningDataModule):
             self.test_dataset = SquadNQGDataset(split_set='test',is_test=True)
         
     def train_dataloader(self):
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True)
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=False)
 
     def val_dataloader(self):
-        return DataLoader(self.dev_dataset, batch_size=self.batch_size, shuffle=True)
+        return DataLoader(self.dev_dataset, batch_size=self.batch_size, shuffle=False)
 
     def test_dataloader(self):
         return DataLoader(self.test_dataset, batch_size=1, shuffle=False)
@@ -62,15 +62,15 @@ class DatasetUtilsMixin():
         model_input['labels'][-1] = label_id
 
         # pad or limit to max length
-        pad_ids = [pad_token_id]*MAX_INPUT_LENGTH
-        pad_labels = [-100]*MAX_INPUT_LENGTH
-        model_input['input_ids'] = (model_input['input_ids'] + pad_ids)[:MAX_INPUT_LENGTH] 
-        model_input['labels'] = (model_input['labels'] + pad_labels)[:MAX_INPUT_LENGTH]
+        # pad_ids = [pad_token_id]*MAX_INPUT_LENGTH
+        # pad_labels = [-100]*MAX_INPUT_LENGTH
+        # model_input['input_ids'] = (model_input['input_ids'] + pad_ids)[:MAX_INPUT_LENGTH] 
+        # model_input['labels'] = (model_input['labels'] + pad_labels)[:MAX_INPUT_LENGTH]
 
-        # print(model_input)
-        # print(tokenizer.decode(model_input['input_ids']))
-        # print(tokenizer.decode([label_id]))
-        # print('question_mask_position',question_mask_position)
+        print(model_input)
+        print(tokenizer.decode(model_input['input_ids']))
+        print(tokenizer.decode([label_id]))
+        print('question_mask_position',question_mask_position)
 
         return self.convert_to_tensor(model_input)
 
