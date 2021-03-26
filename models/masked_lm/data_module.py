@@ -90,19 +90,20 @@ class SquadQGDataset(Dataset,DatasetUtilsMixin):
         # compute total data length for Recurrent Masked
         # Recurrent Masked compute one token loss once
         # we have to find out the number of masked token
-        new_data = []
-        for i,data in enumerate(self.data):
-            question = data['question']
-            question_encodeing = self.tokenizer(question,return_length=True,max_length=MAX_QUESTION_LENGTH,truncation=True,add_special_tokens=False)
-            question_length = question_encodeing['length'][0] + 1 # add 1 for [sep] at the end
-            for j in range(question_length):
-                data['question_length']= question_length
-                data['question_mask_position']= j
-                new_data.append(copy.deepcopy(data))
-            print("loading...%d/%d"%(i,len(self.data)),end='\r')
-            # if i == 200: break
-            if args.dev and i == 1000: break
-        self.data = new_data
+        if not is_test:
+            new_data = []
+            for i,data in enumerate(self.data):
+                question = data['question']
+                question_encodeing = self.tokenizer(question,return_length=True,max_length=MAX_QUESTION_LENGTH,truncation=True,add_special_tokens=False)
+                question_length = question_encodeing['length'][0] + 1 # add 1 for [sep] at the end
+                for j in range(question_length):
+                    data['question_length']= question_length
+                    data['question_mask_position']= j
+                    new_data.append(copy.deepcopy(data))
+                print("loading...%d/%d"%(i,len(self.data)),end='\r')
+                # if i == 200: break
+                if args.dev and i == 1000: break
+            self.data = new_data
         
     def __getitem__(self,index):
         data = self.data[index]
@@ -168,18 +169,19 @@ class SquadNQGDataset(Dataset,DatasetUtilsMixin):
         # compute total data length for Recurrent Masked
         # Recurrent Masked compute one token loss once
         # we have to find out the number of masked token
-        new_data = []
-        for i,data in enumerate(self.data):
-            question = data['question']
-            question_encodeing = self.tokenizer(question,return_length=True,max_length=MAX_QUESTION_LENGTH,truncation=True,add_special_tokens=False)
-            question_length = question_encodeing['length'][0] + 1 # add 1 for [sep] at the end
-            for j in range(question_length):
-                data['question_length']= question_length
-                data['question_mask_position']= j
-                new_data.append(copy.deepcopy(data))
-            print("loading...%d/%d"%(i,len(self.data)),end='\r')
-            if args.dev and i == 1000: break
-        self.data = new_data
+        if not is_test:
+            new_data = []
+            for i,data in enumerate(self.data):
+                question = data['question']
+                question_encodeing = self.tokenizer(question,return_length=True,max_length=MAX_QUESTION_LENGTH,truncation=True,add_special_tokens=False)
+                question_length = question_encodeing['length'][0] + 1 # add 1 for [sep] at the end
+                for j in range(question_length):
+                    data['question_length']= question_length
+                    data['question_mask_position']= j
+                    new_data.append(copy.deepcopy(data))
+                print("loading...%d/%d"%(i,len(self.data)),end='\r')
+                if args.dev and i == 1000: break
+            self.data = new_data
         
     def __getitem__(self,index):
         data = self.data[index]
