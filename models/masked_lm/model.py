@@ -21,18 +21,21 @@ class Model(pl.LightningModule,ModelEvalMixin):
         self.model = AutoModelForMaskedLM.from_pretrained(args.base_model)
         self.model.resize_token_embeddings(len(self.tokenizer))
 
+        #
         self.automatic_optimization = False
+        self.opt = torch.optim.AdamW(self.parameters(), lr=args.lr)
+        self.opt.zero_grad()
 
     def forward(self, input_ids,labels=None):
         return self.model(input_ids=input_ids,labels=labels,return_dict=True)
     
     def training_step(self, batch, batch_idx):
-        opt = self.optimizers()
+        opt = self.opt
         
         outputs = self(batch[0],batch[1])
         loss = outputs['loss']
 
-        self.manual_backward(loss)
+        loss.backward()
         # accumulate gradient batches
         if batch_idx % 10 == 0:
             opt.step()
@@ -76,4 +79,4 @@ class Model(pl.LightningModule,ModelEvalMixin):
         self.evaluate_predict(dataset=args.dataset)
     
     def configure_optimizers(self):
-        return torch.optim.AdamW(self.parameters(), lr=args.lr)
+        return self.opt
