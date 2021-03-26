@@ -5,9 +5,9 @@ def get_args():
     parser.add_argument('--base_model',default='bert-base-uncased',
             choices=[
                 'bert-base-uncased','bert-large-uncased',
-                # 'roberta-base','roberta-large',
-                # 'albert-base-v1','albert-large-v1',
-                # 'albert-base-v2','albert-large-v2'
+                'roberta-base','roberta-large',
+                'albert-base-v1','albert-large-v1',
+                'albert-base-v2','albert-large-v2'
                 ],
             type=str
         )
