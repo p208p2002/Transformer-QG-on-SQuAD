@@ -99,6 +99,7 @@ class SquadQGDataset(Dataset,DatasetUtilsMixin):
                 data['question_mask_position']= j
                 new_data.append(copy.deepcopy(data))
             print("loading...%d/%d"%(i,len(self.data)),end='\r')
+            if args.dev and i == 1000: break
         self.data = new_data
         
     def __getitem__(self,index):
@@ -175,6 +176,7 @@ class SquadNQGDataset(Dataset,DatasetUtilsMixin):
                 data['question_mask_position']= j
                 new_data.append(copy.deepcopy(data))
             print("loading...%d/%d"%(i,len(self.data)),end='\r')
+            if args.dev and i == 1000: break
         self.data = new_data
         
     def __getitem__(self,index):

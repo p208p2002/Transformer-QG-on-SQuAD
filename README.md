@@ -24,6 +24,8 @@ We report two dataset setting as Follow
 - GPT2
 - BART
 - T5
+- BERT
+- RoBERTa
 
 ## Expriments
 `NQG Scorer` which using in SQuAD NQG, has a [special pre-porcessing](https://github.com/xinyadu/nqg/issues/21) action before evaluation.
