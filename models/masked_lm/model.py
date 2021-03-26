@@ -23,7 +23,7 @@ class Model(pl.LightningModule,ModelEvalMixin):
 
         #
         self.automatic_optimization = False
-        self.accumulation_steps = 30
+        self.accumulation_steps = 10
 
     def forward(self, input_ids,labels=None):
         return self.model(input_ids=input_ids,labels=labels,return_dict=True)
