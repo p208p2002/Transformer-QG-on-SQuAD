@@ -35,7 +35,6 @@ class Model(pl.LightningModule,ModelEvalMixin):
         
         loss = outputs['loss']
         self.log_dict({'loss':loss.item()},prog_bar=True)
-        loss = loss/self.accumulation_steps
         self.manual_backward(loss)
 
         # accumulate gradient batches
