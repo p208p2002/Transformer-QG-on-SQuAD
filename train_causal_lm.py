@@ -35,7 +35,6 @@ if __name__ == "__main__":
         model = Model.load_from_checkpoint(args.from_checkpoint)
     
     # train
-    import time
     if args.run_test == False:
         tuner = pl.tuner.tuning.Tuner(deepcopy(trainer))
         new_batch_size = tuner.scale_batch_size(model, datamodule=dm)
