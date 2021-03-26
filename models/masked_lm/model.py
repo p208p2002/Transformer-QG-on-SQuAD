@@ -23,26 +23,26 @@ class Model(pl.LightningModule,ModelEvalMixin):
 
         #
         self.automatic_optimization = False
-        self.opt = torch.optim.AdamW(self.parameters(), lr=args.lr)
-        self.opt.zero_grad()
+        self.accumulation_steps = 20
 
     def forward(self, input_ids,labels=None):
         return self.model(input_ids=input_ids,labels=labels,return_dict=True)
     
     def training_step(self, batch, batch_idx):
-        opt = self.opt
+        opt = self.optimizers()
         
         outputs = self(batch[0],batch[1])
+        
         loss = outputs['loss']
+        self.log_dict({'loss':loss.item()},prog_bar=True)
+        loss = loss/self.accumulation_steps
+        self.manual_backward(loss)
 
-        loss.backward()
         # accumulate gradient batches
-        if batch_idx % 10 == 0:
+        if batch_idx % self.accumulation_steps == 0:
             opt.step()
             opt.zero_grad()
-
-        self.log_dict({'loss':loss},prog_bar=True)
-    
+        
     def validation_step(self, batch, batch_idx):
         outputs = self(batch[0],batch[1])
         loss = outputs['loss']
@@ -79,4 +79,6 @@ class Model(pl.LightningModule,ModelEvalMixin):
         self.evaluate_predict(dataset=args.dataset)
     
     def configure_optimizers(self):
-        return self.opt
+        opt = torch.optim.AdamW(self.parameters(), lr=args.lr)
+        opt.zero_grad()
+        return opt

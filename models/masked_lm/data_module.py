@@ -13,7 +13,8 @@ args = get_args()
 class DataModule(pl.LightningDataModule):
     def __init__(self,args = get_args()):
         super().__init__()
-        self.batch_size = 1
+        self.batch_size = args.batch_size
+        # self.batch_size = 4
 
         if args.dataset == 'squad':
             self.train_dataset = SquadQGDataset(split_set='train')
@@ -99,6 +100,7 @@ class SquadQGDataset(Dataset,DatasetUtilsMixin):
                 data['question_mask_position']= j
                 new_data.append(copy.deepcopy(data))
             print("loading...%d/%d"%(i,len(self.data)),end='\r')
+            # if i == 200: break
             if args.dev and i == 1000: break
         self.data = new_data
         
