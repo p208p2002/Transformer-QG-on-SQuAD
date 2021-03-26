@@ -54,7 +54,7 @@ class Model(pl.LightningModule,ModelEvalMixin):
             num_beams=3,
             num_return_sequences=num_return_sequences,
             pad_token_id = self.tokenizer.pad_token_id,
-            eos_token_id = self.tokenizer.eos_token_id
+            eos_token_id = self.tokenizer.sep_token_id
         )
 
         assert len(sample_outputs) == num_return_sequences # 1
