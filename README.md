@@ -93,6 +93,7 @@ optional arguments:
   --run_test
   -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
 ```
+
 ### Causal LM
 ```
 usage: train_causal_lm.py [-h] [--base_model {gpt2,gpt2-large}]
