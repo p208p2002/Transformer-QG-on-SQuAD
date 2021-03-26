@@ -21,11 +21,12 @@ We report two dataset setting as Follow
 > [Learning to Ask: Neural Question Generation for Reading Comprehension](https://arxiv.org/abs/1705.00106)
 
 ## Available models
-- GPT2
+- ALBERT
 - BART
-- T5
 - BERT
+- GPT2
 - RoBERTa
+- T5
 
 ## Expriments
 `NQG Scorer` which using in SQuAD NQG, has a [special pre-porcessing](https://github.com/xinyadu/nqg/issues/21) action before evaluation.
