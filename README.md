@@ -108,3 +108,21 @@ optional arguments:
   --run_test
   -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
 ```
+
+### Masked LM
+```
+usage: train_masked_lm.py [-h]
+                          [--base_model {bert-base-uncased,bert-large-uncased,roberta-base,roberta-large}]
+                          [-d {squad,squad-nqg}] [--epoch EPOCH] [--lr LR]
+                          [--dev DEV] [--run_test] [-fc FROM_CHECKPOINT]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --base_model {bert-base-uncased,bert-large-uncased,roberta-base,roberta-large}
+  -d {squad,squad-nqg}, --dataset {squad,squad-nqg}
+  --epoch EPOCH
+  --lr LR
+  --dev DEV
+  --run_test
+  -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
+```
