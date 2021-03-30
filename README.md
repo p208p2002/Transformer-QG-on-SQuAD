@@ -29,7 +29,7 @@ We report two dataset setting as Follow
 - T5
 
 ## Expriments
-We report score with `NQG Scorer` which using in SQuAD NQG.
+We report score with `NQG Scorer` which is using in SQuAD NQG.
 
 If not special explanation, the size of the model defaults to "base".
 
