@@ -26,24 +26,19 @@ We report two dataset setting as Follow
 - T5
 
 ## Expriments
-`NQG Scorer` which using in SQuAD NQG, has a [special pre-porcessing](https://github.com/xinyadu/nqg/issues/21) action before evaluation.
-For `Our Scorer`, we first `lower()` and `tokenize()` in glod labels and predcit sentences, then we evaluation.
-> see `utils/scorer.py` for implement detail
-<!--
+We report score with `NQG Scorer` which using in SQuAD NQG.
+
+If not special explanation, the size of the model defaults to "base".
+
 ### SQuAD
-#### NQG Scorer
 Model                            |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
 ---------------------------------|------|------|------|------|------|-------|
 BERT-HLSQG (ours)|
 BART-HLSQG                       |54.67 |39.26 |30.34 |24.15 |25.43 |52.64  |
-#### Our Scorer
-Model                            |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
----------------------------------|------|------|------|------|------|-------|
-BERT-HLSQG (ours)|
-BART-HLSQG                       |54.67 |39.26 |30.34 |24.15 |25.43 |52.64  |
--->
+GPT2-HLSQG                       |49.31 |33.95 |25.41| 19.69 |22.29 |48.82  |
+T5-HLSQG                         |54.29 |39.22 |30.43 |24.26 |25.56 |53.11  |
+
 ### SQuAD NQG
-#### NQG Scorer
 Model                            |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
 ---------------------------------|------|------|------|------|------|-------|
 BERT-HLSQG (Chan et al.)         |49.73 |34.60 |26.13 |20.33 |23.88 |48.23  |
@@ -51,14 +46,7 @@ BERT-HLSQG (ours)|
 RoBERTa-HLSQG|
 BART-HLSQG                       |54.12 |38.19 |28.84 |22.35 |24.55 |51.03  |
 GPT2-HLSQG                       |49.82 |33.69 |24.71 |18.63 |21.90 |47.60  |
-
-#### Our Scorer
-<!--
-Model     |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
-----------|------|------|------|------|------|-------|
-BART-HLSQG|44.27 |28.01 |18.72 |12.38 |25.70 |48.23  |
--->
-
+T5-HLSQG                         |53.13 |37.60 |28.62 |22.38 |24.48 |51.20  |
 
 ## Install requirements
 1. If you don't have pytorch 1.6+ please install or update first
