@@ -15,9 +15,13 @@ class Scorer():
     def _preprocess(self,raw_sentence):
         result = self.nlp(raw_sentence.replace("\n\n",""))
         tokens = []
-        for token in result.sentences[0].tokens:
-            tokens.append(token.text.lower())
-            tokenize_sentence = ' '.join(tokens)
+        try:
+            for token in result.sentences[0].tokens:
+                tokens.append(token.text.lower())
+                tokenize_sentence = ' '.join(tokens)
+        except:
+            print('_preprocess fail, return ""\n',raw_sentence,result)
+            return ""
         return tokenize_sentence
         
     def add(self,hyp,refs):
@@ -33,7 +37,7 @@ class Scorer():
     def compute(self,save_score_report_path=None):
         if save_score_report_path is not None:
             os.makedirs(save_score_report_path,exist_ok=True)
-            score_f = open(os.path.join(save_score_report_path,'score.txt'),'w',encoding='utf-8')
+            score_f = open(os.path.join(save_score_report_path,'our_scorer.txt'),'w',encoding='utf-8')
         for score_key in self.score.keys():
             _score = self.score[score_key]/self.len
             if save_score_report_path is not None:

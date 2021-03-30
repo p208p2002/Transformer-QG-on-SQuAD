@@ -45,7 +45,7 @@ class ModelEvalMixin():
         # ngq scorer
         assert os.path.isdir('nqg'),'nqg scorer is not detect, please check "README.md" for help'
         nqg_predict_file_path = os.path.join(log_dir,'predict_for_nqg_scorer.txt')
-        nqg_predict_score_out_path = os.path.join(log_dir,'nqg_score.txt')
+        nqg_predict_score_out_path = os.path.join(log_dir,'nqg_scorer.txt')
         if dataset == 'squad-nqg':
             os.system('python nqg/qgevalcap/eval.py --src nqg/data/processed/src-test.txt --tgt nqg/data/processed/tgt-test.txt --out %s >> %s'%(nqg_predict_file_path,nqg_predict_score_out_path))
         elif dataset == 'squad':
