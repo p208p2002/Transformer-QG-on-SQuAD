@@ -21,8 +21,11 @@ We report two dataset setting as Follow
 > [Learning to Ask: Neural Question Generation for Reading Comprehension](https://arxiv.org/abs/1705.00106)
 
 ## Available models
-- GPT2
+- ALBERT
 - BART
+- BERT
+- GPT2
+- RoBERTa
 - T5
 
 ## Expriments
@@ -34,6 +37,7 @@ If not special explanation, the size of the model defaults to "base".
 Model                            |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
 ---------------------------------|------|------|------|------|------|-------|
 BERT-HLSQG (ours)|
+RoBERTa-HLSQG|
 BART-HLSQG                       |54.67 |39.26 |30.34 |24.15 |25.43 |52.64  |
 GPT2-HLSQG                       |49.31 |33.95 |25.41| 19.69 |22.29 |48.82  |
 T5-HLSQG                         |54.29 |39.22 |30.43 |24.26 |25.56 |53.11  |
@@ -78,6 +82,7 @@ optional arguments:
   --run_test
   -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
 ```
+
 ### Causal LM
 ```
 usage: train_causal_lm.py [-h] [--base_model {gpt2,gpt2-large}]
@@ -88,6 +93,26 @@ optional arguments:
   -h, --help            show this help message and exit
   --base_model {gpt2,gpt2-large}
   -d {squad,squad-nqg}, --dataset {squad,squad-nqg}
+  --epoch EPOCH
+  --lr LR
+  --dev DEV
+  --run_test
+  -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
+```
+
+### Masked LM
+```
+usage: train_masked_lm.py [-h]
+                          [--base_model {bert-base-uncased,bert-large-uncased,roberta-base,roberta-large,albert-base-v1,albert-large-v1,albert-base-v2,albert-large-v2}]
+                          [-d {squad,squad-nqg}] [--batch_size BATCH_SIZE]
+                          [--epoch EPOCH] [--lr LR] [--dev DEV] [--run_test]
+                          [-fc FROM_CHECKPOINT]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --base_model {bert-base-uncased,bert-large-uncased,roberta-base,roberta-large,albert-base-v1,albert-large-v1,albert-base-v2,albert-large-v2}
+  -d {squad,squad-nqg}, --dataset {squad,squad-nqg}
+  --batch_size BATCH_SIZE
   --epoch EPOCH
   --lr LR
   --dev DEV

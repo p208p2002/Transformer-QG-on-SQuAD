@@ -21,49 +21,63 @@ class Model(pl.LightningModule,ModelEvalMixin):
         self.model = AutoModelForMaskedLM.from_pretrained(args.base_model)
         self.model.resize_token_embeddings(len(self.tokenizer))
 
+        #
+        self.automatic_optimization = False
+        self.accumulation_steps = 10
+
     def forward(self, input_ids,labels=None):
         return self.model(input_ids=input_ids,labels=labels,return_dict=True)
     
     def training_step(self, batch, batch_idx):
+        opt = self.optimizers(use_pl_optimizer=False)
+        
         outputs = self(batch[0],batch[1])
+        
         loss = outputs['loss']
-        return loss
-    
+        self.manual_backward(loss)
+
+        # accumulate gradient batches
+        if batch_idx % self.accumulation_steps == 0:
+            opt.step()
+            opt.zero_grad()
+            self.log_dict({'loss':loss.item()},prog_bar=True)
+        
     def validation_step(self, batch, batch_idx):
         outputs = self(batch[0],batch[1])
         loss = outputs['loss']
         self.log('dev_loss',loss)
-        return loss
         
-    # def test_step(self, batch, batch_idx):
-    #     input_ids = batch[0]
-    #     ref_question = batch[1][0]
-    #     input_ids_len = input_ids.shape[-1]
-    #     batch_size = input_ids.shape[0]
-    #     assert batch_size == 1
+    def test_step(self, batch, batch_idx):
+        input_ids = batch[0]
+        ref_question = batch[1][0]
+        input_ids_len = input_ids.shape[-1]
+        batch_size = input_ids.shape[0]
+        assert batch_size == 1
 
-    #     num_return_sequences = 1
-    #     sample_outputs = self.model.generate(
-    #         input_ids = input_ids,
-    #         max_length=MAX_INPUT_LENGTH,
-    #         early_stopping=True,
-    #         temperature=0.85,
-    #         do_sample=True,
-    #         top_p=0.9,
-    #         top_k=10,
-    #         num_beams=3,
-    #         num_return_sequences=num_return_sequences,
-    #         pad_token_id = self.tokenizer.pad_token_id,
-    #         eos_token_id = self.tokenizer.eos_token_id
-    #     )
+        num_return_sequences = 1
+        sample_outputs = self.model.generate(
+            input_ids = input_ids,
+            max_length=MAX_INPUT_LENGTH,
+            early_stopping=True,
+            temperature=0.85,
+            do_sample=True,
+            top_p=0.9,
+            top_k=10,
+            num_beams=3,
+            num_return_sequences=num_return_sequences,
+            pad_token_id = self.tokenizer.pad_token_id,
+            eos_token_id = self.tokenizer.sep_token_id
+        )
 
-    #     assert len(sample_outputs) == num_return_sequences # 1
-    #     sample_output = sample_outputs[0]        
-    #     decode_question = self.tokenizer.decode(sample_output[input_ids_len:], skip_special_tokens=True)
-    #     self.write_predict(decode_question,ref_question)
+        assert len(sample_outputs) == num_return_sequences # 1
+        sample_output = sample_outputs[0]        
+        decode_question = self.tokenizer.decode(sample_output[input_ids_len:], skip_special_tokens=True)
+        self.write_predict(decode_question,ref_question)
 
-    # def test_epoch_end(self,outputs):
-    #     self.evaluate_predict(dataset=args.dataset)
+    def test_epoch_end(self,outputs):
+        self.evaluate_predict(dataset=args.dataset)
     
     def configure_optimizers(self):
-        return torch.optim.AdamW(self.parameters(), lr=args.lr)
+        opt = torch.optim.AdamW(self.parameters(), lr=args.lr)
+        opt.zero_grad()
+        return opt

@@ -4,8 +4,8 @@ from .argparser import get_args
 _args = get_args()
 
 #
-GPUS = 0
-ACCELERATOR = None
+GPUS = -1
+ACCELERATOR = 'dp'
 
 #
 HL_TOKEN = '[HL]'

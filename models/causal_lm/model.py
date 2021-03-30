@@ -33,7 +33,6 @@ class Model(pl.LightningModule,ModelEvalMixin):
         outputs = self(batch[0],batch[1])
         loss = outputs['loss']
         self.log('dev_loss',loss)
-        return loss
         
     def test_step(self, batch, batch_idx):
         input_ids = batch[0]
