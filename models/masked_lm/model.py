@@ -21,26 +21,16 @@ class Model(pl.LightningModule,ModelEvalMixin):
         self.model = AutoModelForMaskedLM.from_pretrained(args.base_model)
         self.model.resize_token_embeddings(len(self.tokenizer))
 
-        #
-        self.automatic_optimization = False
-        self.accumulation_steps = 10
-
     def forward(self, input_ids,labels=None):
         return self.model(input_ids=input_ids,labels=labels,return_dict=True)
     
     def training_step(self, batch, batch_idx):
         opt = self.optimizers(use_pl_optimizer=False)
-        
-        outputs = self(batch[0],batch[1])
-        
-        loss = outputs['loss']
-        self.manual_backward(loss)
 
-        # accumulate gradient batches
-        if batch_idx % self.accumulation_steps == 0:
-            opt.step()
-            opt.zero_grad()
-            self.log_dict({'loss':loss.item()},prog_bar=True)
+        outputs = self(batch[0],batch[1])
+        loss = outputs['loss']
+
+        return loss
         
     def validation_step(self, batch, batch_idx):
         outputs = self(batch[0],batch[1])

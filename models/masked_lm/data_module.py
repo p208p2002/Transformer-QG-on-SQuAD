@@ -13,8 +13,7 @@ args = get_args()
 class DataModule(pl.LightningDataModule):
     def __init__(self,args = get_args()):
         super().__init__()
-        self.batch_size = args.batch_size
-        # self.batch_size = 4
+        self.batch_size = 1
 
         if args.dataset == 'squad':
             self.train_dataset = SquadQGDataset(split_set='train')
@@ -26,10 +25,10 @@ class DataModule(pl.LightningDataModule):
             self.test_dataset = SquadNQGDataset(split_set='test',is_test=True)
         
     def train_dataloader(self):
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=False)
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True)
 
     def val_dataloader(self):
-        return DataLoader(self.dev_dataset, batch_size=self.batch_size, shuffle=False)
+        return DataLoader(self.dev_dataset, batch_size=self.batch_size, shuffle=True)
 
     def test_dataloader(self):
         return DataLoader(self.test_dataset, batch_size=1, shuffle=False)
@@ -101,7 +100,7 @@ class SquadQGDataset(Dataset,DatasetUtilsMixin):
                     data['question_mask_position']= j
                     new_data.append(copy.deepcopy(data))
                 print("loading...%d/%d"%(i,len(self.data)),end='\r')
-                # if i == 200: break
+                if i == 200: break
                 if args.dev and i == 1000: break
             self.data = new_data
         
