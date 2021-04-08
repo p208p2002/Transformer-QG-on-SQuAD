@@ -2,7 +2,9 @@ import json
 import re
 import os
 from .scorer import Scorer
-    
+import torch
+import torch.nn as nn
+
 class ModelEvalMixin():
     def write_predict(self, decode_question, ref_question):
         #
@@ -52,3 +54,26 @@ class ModelEvalMixin():
             os.system('python nqg/qgevalcap/eval.py --src nqg/data/processed/src-dev.txt --tgt nqg/data/processed/tgt-dev.txt --out %s >> %s'%(nqg_predict_file_path,nqg_predict_score_out_path))
         
         print("see log_dir:`%s` for full report"%log_dir)
+
+class MaskedLMGenerator():
+    def __init__(self,model,tokenizer):
+        self.model = model
+        self.tokenizer = tokenizer
+        self.mask_token_id = self.tokenizer.mask_token_id
+        self.eos_token_id = self.tokenizer.sep_token_id
+        
+    def generate(self,input_ids,max_length=512):
+        current_length = torch.numel(input_ids)
+        assert current_length < max_length
+        input_ids = input_ids.view(current_length).tolist()
+        gen_step_count = max_length - current_length
+        input_ids.append(self.mask_token_id)
+        for i in range(gen_step_count):
+            logits = self.model(torch.LongTensor(input_ids).unsqueeze(0).to(self.model.device),return_dict=True).logits
+            last_token_logits = logits[0,-1,:] # shape: [vacab_size]
+            decode_id = torch.argmax(last_token_logits,dim=-1).item()
+            assert input_ids.pop(-1) == self.mask_token_id
+            if decode_id == self.eos_token_id or i == (gen_step_count-1):
+                return self.tokenizer.decode(input_ids)
+            input_ids.append(decode_id)
+            input_ids.append(self.mask_token_id)

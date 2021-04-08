@@ -47,18 +47,22 @@ class DatasetUtilsMixin():
             model_input = tokenizer(context,max_length=MAX_CONTEXT_LENGTH,truncation=True)
             return self.convert_to_tensor(model_input)
 
-        context_input = tokenizer(context)
+        context_input = tokenizer(context,add_special_tokens=False)
         label_input = self.tokenizer(label,return_length=True,max_length=MAX_QUESTION_LENGTH,truncation=True,add_special_tokens=False)
         
         # limit context length
         model_input = {}
-        model_input['input_ids'] = context_input['input_ids'][:MAX_CONTEXT_LENGTH] + label_input['input_ids'][:question_mask_position+1]
+        model_input['input_ids'] = [self.tokenizer.cls_token_id] + context_input['input_ids'][:MAX_CONTEXT_LENGTH-2] + [self.tokenizer.sep_token_id] + label_input['input_ids'][:question_mask_position+1]
         label_id = model_input['input_ids'].pop(-1)
         model_input['input_ids'].append(self.tokenizer.mask_token_id)
 
-        # # prepars lables
-        model_input['labels'] = [-100]*len(model_input['input_ids'][:])
+        # print(self.tokenizer.decode([label_id]))
+
+        # prepars lables
+        model_input['labels'] = [-100]*len(model_input['input_ids'])
         model_input['labels'][-1] = label_id
+
+        # print(len(model_input['labels']),model_input['labels'])
 
         # pad or limit to max length
         pad_ids = [pad_token_id]*MAX_INPUT_LENGTH
@@ -70,6 +74,11 @@ class DatasetUtilsMixin():
         # print(tokenizer.decode(model_input['input_ids']))
         # print(tokenizer.decode([label_id]))
         # print('question_mask_position',question_mask_position)
+
+        # for token_id,label_id in zip(model_input['input_ids'],model_input['labels']):
+        #     if label_id not in [self.tokenizer.pad_token_id,-100]:
+        #         print((self.tokenizer.decode([token_id]),self.tokenizer.decode([label_id])),end="\n")
+        # print()
 
         return self.convert_to_tensor(model_input)
 
@@ -100,7 +109,7 @@ class SquadQGDataset(Dataset,DatasetUtilsMixin):
                     data['question_mask_position']= j
                     new_data.append(copy.deepcopy(data))
                 print("loading...%d/%d"%(i,len(self.data)),end='\r')
-                if i == 200: break
+                # if i == 200: break
                 if args.dev and i == 1000: break
             self.data = new_data
         

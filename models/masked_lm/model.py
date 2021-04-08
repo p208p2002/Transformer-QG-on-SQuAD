@@ -7,7 +7,7 @@ import re
 import os
 import json
 from .config import MAX_INPUT_LENGTH
-from utils import ModelEvalMixin
+from utils import ModelEvalMixin, MaskedLMGenerator
 args = get_args()
 
 
@@ -44,24 +44,30 @@ class Model(pl.LightningModule,ModelEvalMixin):
         batch_size = input_ids.shape[0]
         assert batch_size == 1
 
-        num_return_sequences = 1
-        sample_outputs = self.model.generate(
-            input_ids = input_ids,
-            max_length=MAX_INPUT_LENGTH,
-            early_stopping=True,
-            temperature=0.85,
-            do_sample=True,
-            top_p=0.9,
-            top_k=10,
-            num_beams=3,
-            num_return_sequences=num_return_sequences,
-            pad_token_id = self.tokenizer.pad_token_id,
-            eos_token_id = self.tokenizer.sep_token_id
-        )
+        # num_return_sequences = 1
+        # sample_outputs = self.model.generate(
+        #     input_ids = input_ids,
+        #     max_length=MAX_INPUT_LENGTH,
+        #     early_stopping=True,
+        #     temperature=0.85,
+        #     do_sample=True,
+        #     top_p=0.9,
+        #     top_k=10,
+        #     num_beams=3,
+        #     num_return_sequences=num_return_sequences,
+        #     pad_token_id = self.tokenizer.pad_token_id,
+        #     eos_token_id = self.tokenizer.sep_token_id
+        # )
 
-        assert len(sample_outputs) == num_return_sequences # 1
-        sample_output = sample_outputs[0]        
-        decode_question = self.tokenizer.decode(sample_output[input_ids_len:], skip_special_tokens=True)
+        # assert len(sample_outputs) == num_return_sequences # 1
+        # sample_output = sample_outputs[0]        
+        # decode_question = self.tokenizer.decode(sample_output[input_ids_len:], skip_special_tokens=True)
+
+        generator = MaskedLMGenerator(self.model,self.tokenizer)
+        decode_question = generator.generate(input_ids)[input_ids_len:]
+        # print(decode_question)
+        # # exit()
+
         self.write_predict(decode_question,ref_question)
 
     def test_epoch_end(self,outputs):
