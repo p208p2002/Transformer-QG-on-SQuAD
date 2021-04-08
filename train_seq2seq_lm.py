@@ -9,14 +9,14 @@ from copy import deepcopy
 args = argparser.get_args()
 
 if __name__ == "__main__":
-    # load model
+    # load model from_checkpoint or init a new one 
     if args.from_checkpoint is None:
         model = Model()
     else:
         print('load from checkpoint')
         model = Model.load_from_checkpoint(args.from_checkpoint)
     
-    # run as server
+    # run as a flask api server
     if args.server:
         flask = model.init_server()
         flask.run()
@@ -47,16 +47,18 @@ if __name__ == "__main__":
         model.hparams.batch_size = new_batch_size
         trainer.fit(model,datamodule=dm)
 
-    # run_test
+    # decide which checkpoint to use
     last_model_path = trainer.checkpoint_callback.last_model_path
     best_model_path = trainer.checkpoint_callback.best_model_path
     _use_model_path = last_model_path if best_model_path == "" else best_model_path
     print('use checkpoint:',_use_model_path)
+
+    # run_test
     trainer.test(
-            model=model if _use_model_path == "" else None,
-            datamodule=dm,
-            ckpt_path=_use_model_path
-        )
+        model=model if _use_model_path == "" else None,
+        datamodule=dm,
+        ckpt_path=_use_model_path
+    )
         
     
     
