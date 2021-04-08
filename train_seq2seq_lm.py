@@ -9,6 +9,19 @@ from copy import deepcopy
 args = argparser.get_args()
 
 if __name__ == "__main__":
+    # load model
+    if args.from_checkpoint is None:
+        model = Model()
+    else:
+        print('load from checkpoint')
+        model = Model.load_from_checkpoint(args.from_checkpoint)
+    
+    # run as server
+    if args.server:
+        flask = model.init_server()
+        flask.run()
+        exit()
+    
     # trainer config
     trainer = pl.Trainer(
         gpus=GPUS,
@@ -25,13 +38,6 @@ if __name__ == "__main__":
     
     # DataModule
     dm = DataModule()
-
-    # from_checkpoint
-    if args.from_checkpoint is None:
-        model = Model()
-    else:
-        print('load from checkpoint')
-        model = Model.load_from_checkpoint(args.from_checkpoint)
     
     # train
     if args.run_test == False:
