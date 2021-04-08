@@ -2,7 +2,7 @@ from flask import Flask
 
 class ServerMixin():
     def init_server(self):
-        self.app = Flask(__name__)
+        self.flask = Flask(__name__)
         
         # add route
         @self.app.route('/')
@@ -21,4 +21,4 @@ class ServerMixin():
             #     num_return_sequences=1
             # )
             return 'ok'
-        return self.app
+        return self.flask
