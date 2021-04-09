@@ -9,11 +9,11 @@ from .config import MODEL_CONFIG, MAX_INPUT_LENGTH, MAX_QUESTION_LENGTH, MAX_CON
 import torch
 import copy
 args = get_args()
-
 class DataModule(pl.LightningDataModule):
     def __init__(self,args = get_args()):
         super().__init__()
         self.batch_size = 1
+        os.environ['TOKENIZERS_PARALLELISM'] = 'true'
 
         if args.dataset == 'squad':
             self.train_dataset = SquadQGDataset(split_set='train')
@@ -25,10 +25,10 @@ class DataModule(pl.LightningDataModule):
             self.test_dataset = SquadNQGDataset(split_set='test',is_test=True)
         
     def train_dataloader(self):
-        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True)
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=os.cpu_count())
 
     def val_dataloader(self):
-        return DataLoader(self.dev_dataset, batch_size=self.batch_size, shuffle=True)
+        return DataLoader(self.dev_dataset, batch_size=self.batch_size, shuffle=True, num_workers=os.cpu_count())
 
     def test_dataloader(self):
         return DataLoader(self.test_dataset, batch_size=1, shuffle=False)
@@ -47,12 +47,12 @@ class DatasetUtilsMixin():
             model_input = tokenizer(context,max_length=MAX_CONTEXT_LENGTH,truncation=True)
             return self.convert_to_tensor(model_input)
 
-        context_input = tokenizer(context,add_special_tokens=False)
+        context_input = tokenizer(context,add_special_tokens=True,max_length=MAX_CONTEXT_LENGTH,truncation=True)
         label_input = self.tokenizer(label,return_length=True,max_length=MAX_QUESTION_LENGTH,truncation=True,add_special_tokens=False)
         
         # limit context length
         model_input = {}
-        model_input['input_ids'] = [self.tokenizer.cls_token_id] + context_input['input_ids'][:MAX_CONTEXT_LENGTH-2] + [self.tokenizer.sep_token_id] + label_input['input_ids'][:question_mask_position+1]
+        model_input['input_ids'] = context_input['input_ids'] + label_input['input_ids'][:question_mask_position+1]
         label_id = model_input['input_ids'].pop(-1)
         model_input['input_ids'].append(self.tokenizer.mask_token_id)
 
