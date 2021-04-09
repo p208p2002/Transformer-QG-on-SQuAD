@@ -126,7 +126,6 @@ optional arguments:
 ```
 
 ## Deploy
-## Usage
 ### Start up
 ```
 python train_xxx_lm.py --server --base_mode YOUR_BASE_MODEL --from_checkpoint FROM_CHECKPOINT
