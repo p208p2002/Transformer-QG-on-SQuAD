@@ -4,7 +4,7 @@ from flask import request
 from flask.json import jsonify
 
 class ServerMixin():
-    def run_server(self,max_context_length = 400,max_question_length=32):
+    def run_server(self,max_context_length = 400,max_question_length=32,port=5000):
         if self._type == 'seq2seq_lm':
             max_decode_length = max_question_length
         elif self._type in ['causal_lm','masked_lm']:
@@ -44,4 +44,4 @@ class ServerMixin():
 
             return jsonify({"predict":decode_question})
 
-        self.flask.run()
+        self.flask.run(port=port)

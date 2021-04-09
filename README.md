@@ -6,6 +6,11 @@ C' = [c1, c2, ..., [HL], a1, ..., a|A|, [HL], ..., c|C|]
 ```
 > Proposed by [Ying-Hong Chan & Yao-Chung Fan. (2019). A Re-current BERT-based Model for Question Generation.](https://www.aclweb.org/anthology/D19-5821/)
 
+## Features
+- Fully pipline from fine-tune to evaluation
+- Support most of state of the art models
+- Fast deploy as a API server
+
 ## Data setting
 We report two dataset setting as Follow
 
@@ -119,3 +124,26 @@ optional arguments:
   --run_test
   -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
 ```
+
+## Deploy
+## Usage
+### Start up
+```
+python train_xxx_lm.py --server --base_mode YOUR_BASE_MODEL --from_checkpoint FROM_CHECKPOINT
+```
+> The series of `masked_lm` model are not support yet
+### Request example
+```
+curl --location --request POST 'http://127.0.0.1:5000/' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'context=Harry Potter is a series of seven fantasy novels written by [HL] J. K. Rowling. [HL]'
+```
+```json
+{
+    "predict": "Who wrote the books?"
+}
+```
+
+
+
+
