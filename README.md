@@ -138,9 +138,7 @@ curl --location --request POST 'http://127.0.0.1:5000/' \
 --data-urlencode 'context=Harry Potter is a series of seven fantasy novels written by [HL] J. K. Rowling. [HL]'
 ```
 ```json
-{
-    "predict": "Who wrote the books?"
-}
+{"predict": "Who wrote the books?"}
 ```
 
 
