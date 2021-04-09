@@ -18,8 +18,7 @@ if __name__ == "__main__":
     
     # run as a flask api server
     if args.server:
-        flask = model.init_server()
-        flask.run()
+        model.run_server()
         exit()
     
     # trainer config
