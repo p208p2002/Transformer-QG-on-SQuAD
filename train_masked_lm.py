@@ -2,7 +2,6 @@ import pytorch_lightning as pl
 from models.masked_lm import argparser
 from models.masked_lm.model import Model
 from models.masked_lm.data_module import DataModule
-from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.callbacks import ModelCheckpoint
 from models.masked_lm.config import GPUS,ACCELERATOR
 from copy import deepcopy
@@ -19,7 +18,6 @@ if __name__ == "__main__":
         default_root_dir='.log_masked_lm',
         max_epochs=args.epoch,
         callbacks=[
-            # EarlyStopping(monitor='dev_loss',patience=5),
             ModelCheckpoint(monitor='dev_loss',filename='{epoch}-{dev_loss:.2f}',save_last=True),
         ]
     )

@@ -45,7 +45,7 @@ class Model(pl.LightningModule,ModelEvalMixin):
         assert batch_size == 1
 
         generator = MaskedLMGenerator(self.model,self.tokenizer)
-        decode_question = generator.generate(input_ids)[input_ids_len:]
+        decode_question = generator.generate(input_ids)
 
         self.write_predict(decode_question,ref_question)
 

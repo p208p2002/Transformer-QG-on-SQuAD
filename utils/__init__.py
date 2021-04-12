@@ -64,6 +64,7 @@ class MaskedLMGenerator():
         
     def generate(self,input_ids,max_length=512):
         current_length = torch.numel(input_ids)
+        context_length = current_length
         assert current_length < max_length
         input_ids = input_ids.view(current_length).tolist()
         gen_step_count = max_length - current_length
@@ -74,6 +75,6 @@ class MaskedLMGenerator():
             decode_id = torch.argmax(last_token_logits,dim=-1).item()
             assert input_ids.pop(-1) == self.mask_token_id
             if decode_id == self.eos_token_id or i == (gen_step_count-1):
-                return self.tokenizer.decode(input_ids)
+                return self.tokenizer.decode(input_ids[context_length:])
             input_ids.append(decode_id)
             input_ids.append(self.mask_token_id)
