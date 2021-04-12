@@ -8,10 +8,10 @@ import os
 import json
 from .config import MAX_INPUT_LENGTH
 from utils import ModelEvalMixin, MaskedLMGenerator
+from utils.server import ServerMixin
 args = get_args()
 
-
-class Model(pl.LightningModule,ModelEvalMixin):
+class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
     def __init__(self,args = args):
         super().__init__()
         self.save_hyperparameters(args)

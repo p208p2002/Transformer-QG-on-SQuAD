@@ -131,7 +131,6 @@ optional arguments:
 ```
 python train_xxx_lm.py --server --base_mode YOUR_BASE_MODEL --from_checkpoint FROM_CHECKPOINT
 ```
-> The series of `masked_lm` are not support yet
 ### Request example
 ```
 curl --location --request POST 'http://127.0.0.1:5000/' \
