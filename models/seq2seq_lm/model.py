@@ -8,10 +8,11 @@ import os
 import json
 from .config import MAX_INPUT_LENGTH
 from utils import ModelEvalMixin
+from utils.server import ServerMixin
 args = get_args()
 
 
-class Model(pl.LightningModule,ModelEvalMixin):
+class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
     def __init__(self,args = args):
         super().__init__()
         self.save_hyperparameters(args)
@@ -20,6 +21,8 @@ class Model(pl.LightningModule,ModelEvalMixin):
         self.tokenizer = get_tokenizer(args.base_model)
         self.model = AutoModelForSeq2SeqLM.from_pretrained(args.base_model)
         self.model.resize_token_embeddings(len(self.tokenizer))
+        
+        self._type = 'seq2seq_lm'
 
     def forward(self, input_ids,attention_mask,labels=None):
         return self.model(input_ids=input_ids,attention_mask=attention_mask,labels=labels,return_dict=True)

@@ -21,6 +21,8 @@ class Model(pl.LightningModule,ModelEvalMixin):
         self.model = AutoModelForMaskedLM.from_pretrained(args.base_model)
         self.model.resize_token_embeddings(len(self.tokenizer))
 
+        self._type = 'masked_lm'
+
     def forward(self, input_ids,labels=None):
         return self.model(input_ids=input_ids,labels=labels,return_dict=True)
     
