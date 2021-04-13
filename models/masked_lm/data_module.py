@@ -207,9 +207,13 @@ class SquadNQGDataset(Dataset,DatasetUtilsMixin):
                     label=data['question'] + self.tokenizer.sep_token,
                     question_mask_position=question_mask_position
                 )
-            return model_input['input_ids'],model_input['labels'] 
+            if re.match("bert-",args.base_model):
+                return model_input['input_ids'],model_input['labels'],model_input['token_type_ids']
+            return model_input['input_ids'],model_input['labels']
         else:
             model_input = self.prepare_input(context=hl_context)
+            if re.match("bert-",args.base_model):
+                return model_input['input_ids'],data['question'],model_input['token_type_ids']
             return model_input['input_ids'],data['question']
         
     def __len__(self):
