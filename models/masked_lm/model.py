@@ -22,20 +22,29 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
         self.model.resize_token_embeddings(len(self.tokenizer))
 
         self._type = 'masked_lm'
+        self.is_bert = re.match("bert-",args.base_model)
 
-    def forward(self, input_ids,labels=None):
+    def forward(self, input_ids,labels=None,token_type_ids=None):
+        if self.is_bert:
+            assert token_type_ids is not None
+            return self.model(input_ids=input_ids,labels=labels,token_type_ids=token_type_ids,return_dict=True)
         return self.model(input_ids=input_ids,labels=labels,return_dict=True)
     
     def training_step(self, batch, batch_idx):
-        opt = self.optimizers(use_pl_optimizer=False)
-
-        outputs = self(batch[0],batch[1])
+        
+        if self.is_bert:
+            outputs = self(batch[0],batch[1],batch[2])
+        else:
+            outputs = self(batch[0],batch[1])
         loss = outputs['loss']
 
         return loss
         
     def validation_step(self, batch, batch_idx):
-        outputs = self(batch[0],batch[1])
+        if self.is_bert:
+            outputs = self(batch[0],batch[1],batch[2])
+        else:
+            outputs = self(batch[0],batch[1])
         loss = outputs['loss']
         self.log('dev_loss',loss)
         
@@ -46,7 +55,7 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
         batch_size = input_ids.shape[0]
         assert batch_size == 1
 
-        generator = MaskedLMGenerator(self.model,self.tokenizer)
+        generator = MaskedLMGenerator(self.model,self.tokenizer,is_bert=self.is_bert)
         decode_question = generator.generate(input_ids)
 
         self.write_predict(decode_question,ref_question)

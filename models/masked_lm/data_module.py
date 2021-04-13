@@ -8,7 +8,10 @@ from datasets import load_dataset
 from .config import MODEL_CONFIG, MAX_INPUT_LENGTH, MAX_QUESTION_LENGTH, MAX_CONTEXT_LENGTH, HL_TOKEN
 import torch
 import copy
+import re
 args = get_args()
+
+
 class DataModule(pl.LightningDataModule):
     def __init__(self,args = get_args()):
         super().__init__()
@@ -56,29 +59,23 @@ class DatasetUtilsMixin():
         label_id = model_input['input_ids'].pop(-1)
         model_input['input_ids'].append(self.tokenizer.mask_token_id)
 
-        # print(self.tokenizer.decode([label_id]))
-
+        # bert model need segment-type a(0) for context, segment-type b(1) for question
+        if re.match("bert-",args.base_model):
+            model_input['token_type_ids'] = [0]*len(context_input['input_ids']) + [1]*len(model_input['input_ids'])
+            # pad to max length
+            while(len(model_input['token_type_ids'])<MAX_INPUT_LENGTH):
+                model_input['token_type_ids'].append(0)
+            model_input['token_type_ids'] = model_input['token_type_ids'][:MAX_INPUT_LENGTH]
+                
         # prepars lables
         model_input['labels'] = [-100]*len(model_input['input_ids'])
         model_input['labels'][-1] = label_id
-
-        # print(len(model_input['labels']),model_input['labels'])
 
         # pad or limit to max length
         pad_ids = [pad_token_id]*MAX_INPUT_LENGTH
         pad_labels = [-100]*MAX_INPUT_LENGTH
         model_input['input_ids'] = (model_input['input_ids'] + pad_ids)[:MAX_INPUT_LENGTH] 
         model_input['labels'] = (model_input['labels'] + pad_labels)[:MAX_INPUT_LENGTH]
-
-        # print(model_input)
-        # print(tokenizer.decode(model_input['input_ids']))
-        # print(tokenizer.decode([label_id]))
-        # print('question_mask_position',question_mask_position)
-
-        # for token_id,label_id in zip(model_input['input_ids'],model_input['labels']):
-        #     if label_id not in [self.tokenizer.pad_token_id,-100]:
-        #         print((self.tokenizer.decode([token_id]),self.tokenizer.decode([label_id])),end="\n")
-        # print()
 
         return self.convert_to_tensor(model_input)
 
@@ -128,9 +125,13 @@ class SquadQGDataset(Dataset,DatasetUtilsMixin):
                     label=data['question'] + self.tokenizer.sep_token,
                     question_mask_position=question_mask_position
                 )
-            return model_input['input_ids'],model_input['labels'] 
+            if re.match("bert-",args.base_model):
+                return model_input['input_ids'],model_input['labels'],model_input['token_type_ids']
+            return model_input['input_ids'],model_input['labels']
         else:
             model_input = self.prepare_input(context=hl_context)
+            if re.match("bert-",args.base_model):
+                return model_input['input_ids'],data['question'],model_input['token_type_ids']
             return model_input['input_ids'],data['question']
         
     def __len__(self):
