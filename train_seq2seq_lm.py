@@ -6,6 +6,7 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.callbacks import ModelCheckpoint
 from models.seq2seq_lm.config import GPUS,ACCELERATOR
 from copy import deepcopy
+import torch
 args = argparser.get_args()
 
 if __name__ == "__main__":

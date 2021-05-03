@@ -9,6 +9,7 @@ import json
 from .config import MAX_INPUT_LENGTH
 from utils import ModelEvalMixin
 from utils.server import ServerMixin
+from utils.scheduler import setup_scheduler,step_scheduler
 args = get_args()
 
 
@@ -27,6 +28,7 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
     def forward(self, input_ids,attention_mask,labels=None):
         return self.model(input_ids=input_ids,attention_mask=attention_mask,labels=labels,return_dict=True)
     
+    # @step_scheduler
     def training_step(self, batch, batch_idx):
         outputs = self(batch[0],batch[1],batch[2])
         loss = outputs['loss']
@@ -67,6 +69,8 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
 
     def test_epoch_end(self,outputs):
         self.evaluate_predict(dataset=args.dataset)
+        self.save_huggingface_model()
     
+    # @setup_scheduler
     def configure_optimizers(self):
         return torch.optim.AdamW(self.parameters(), lr=args.lr)

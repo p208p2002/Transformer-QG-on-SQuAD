@@ -54,6 +54,13 @@ class ModelEvalMixin():
             os.system('python nqg/qgevalcap/eval.py --src nqg/data/processed/src-dev.txt --tgt nqg/data/processed/tgt-dev.txt --out %s >> %s'%(nqg_predict_file_path,nqg_predict_score_out_path))
         
         print("see log_dir:`%s` for full report"%log_dir)
+    
+    def save_huggingface_model(self):
+        log_dir = os.path.join(self.trainer.default_root_dir,'dev') if self.trainer.log_dir is None else self.trainer.log_dir
+        log_dir = os.path.join(log_dir,'huggingface_model')
+        os.makedirs(log_dir,exist_ok=True)
+        self.model.save_pretrained(log_dir)
+        self.tokenizer.save_pretrained(log_dir)
 
 class MaskedLMGenerator():
     def __init__(self,model,tokenizer,is_bert=False):
