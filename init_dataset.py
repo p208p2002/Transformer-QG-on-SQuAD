@@ -12,3 +12,11 @@ os.system('wget -P datasets/squad-nqg https://raw.githubusercontent.com/xinyadu/
 
 # squad 81k
 os.makedirs('datasets/squad_81k',exist_ok=True)
+
+# drcd
+os.makedirs('datasets/drcd',exist_ok=True)
+os.system('wget -O datasets/drcd/train.json https://github.com/DRCKnowledgeTeam/DRCD/raw/master/DRCD_training.json')
+os.system('wget -O datasets/drcd/test.json https://github.com/DRCKnowledgeTeam/DRCD/raw/master/DRCD_test.json')
+os.system('wget -O datasets/drcd/dev.json https://github.com/DRCKnowledgeTeam/DRCD/raw/master/DRCD_dev.json')
+
+

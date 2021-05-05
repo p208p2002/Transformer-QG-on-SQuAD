@@ -22,13 +22,13 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
         self.tokenizer = get_tokenizer(args.base_model)
         self.model = AutoModelForCausalLM.from_pretrained(args.base_model)
         self.model.resize_token_embeddings(len(self.tokenizer))
-
+        
         self._type = 'causal_lm'
 
     def forward(self, input_ids,labels=None):
         return self.model(input_ids=input_ids,labels=labels,return_dict=True)
     
-    # @step_scheduler
+    @step_scheduler
     def training_step(self, batch, batch_idx):
         outputs = self(batch[0],batch[1])
         loss = outputs['loss']
@@ -64,12 +64,14 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
         assert len(sample_outputs) == num_return_sequences # 1
         sample_output = sample_outputs[0]        
         decode_question = self.tokenizer.decode(sample_output[input_ids_len:], skip_special_tokens=True)
+        if args.base_model == 'ckiplab/gpt2-base-chinese':
+            decode_question = decode_question.replace(" ","")
         self.write_predict(decode_question,ref_question)
 
     def test_epoch_end(self,outputs):
-        self.evaluate_predict(dataset=args.dataset)
         self.save_huggingface_model()
-    
-    # @setup_scheduler
+        self.evaluate_predict(dataset=args.dataset)
+        
+    @setup_scheduler
     def configure_optimizers(self):
         return torch.optim.AdamW(self.parameters(), lr=args.lr)

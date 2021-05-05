@@ -4,3 +4,4 @@ __py*/
 datasets/
 run_plan.sh
 nqg/
+gpt2-drcd-qg-hl/

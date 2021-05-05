@@ -1,10 +1,14 @@
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer,BertTokenizerFast
 from .config import HL_TOKEN
 
 def get_tokenizer(base_model):
     if 'tokenizer' not in globals():
         global tokenizer
-        tokenizer = AutoTokenizer.from_pretrained(base_model)
+        if base_model == "ckiplab/gpt2-base-chinese":
+            # https://huggingface.co/ckiplab/gpt2-base-chinese
+            tokenizer = BertTokenizerFast.from_pretrained('bert-base-chinese')
+        else:
+            tokenizer = AutoTokenizer.from_pretrained(base_model)
         # add special token if needed
         if tokenizer.pad_token is None:
             print('set pad_token...')
