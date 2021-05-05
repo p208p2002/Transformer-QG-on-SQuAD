@@ -12,8 +12,8 @@ args = get_args()
 class DataModule(pl.LightningDataModule):
     def __init__(self,args = get_args()):
         super().__init__()
-        self.batch_size = 1
-
+        self.batch_size = args.batch_size
+    
         if args.dataset == 'squad':
             self.train_dataset = SquadQGDataset(split_set='train')
             self.dev_dataset = SquadQGDataset(split_set='validation')
@@ -22,6 +22,10 @@ class DataModule(pl.LightningDataModule):
             self.train_dataset = SquadNQGDataset(split_set='train')
             self.dev_dataset = SquadNQGDataset(split_set='dev')
             self.test_dataset = SquadNQGDataset(split_set='test',is_test=True)
+        elif args.dataset == 'drcd':
+            self.train_dataset = DrcdDataset(split_set='train')
+            self.dev_dataset = DrcdDataset(split_set='dev')
+            self.test_dataset = DrcdDataset(split_set='test',is_test=True)
         
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True)
@@ -149,3 +153,44 @@ class SquadNQGDataset(Dataset,DatasetUtilsMixin):
         
     def __len__(self):
         return len(self.data)
+
+
+class DrcdDataset(SquadNQGDataset):
+    def __init__(self,split_set:str='train',tokenizer = get_tokenizer(args.base_model),is_test=False):
+        """
+        Args:
+            split_set(str): `train`, `dev` or `test`
+            tokenizer(transformers.PreTrainedTokenizer)
+        """
+        
+        if split_set == 'train':
+            with open('datasets/drcd/train.json','r',encoding='utf-8') as f_train:
+                train_set = json.load(f_train)
+                self.data = train_set
+        elif split_set == 'dev':
+            with open('datasets/drcd/dev.json','r',encoding='utf-8') as f_dev:
+                dev_set = json.load(f_dev)
+                self.data = dev_set
+        elif split_set == 'test':
+            with open('datasets/drcd/test.json','r',encoding='utf-8') as f_test:
+                test_set = json.load(f_test)
+                self.data = test_set
+        
+        # convert
+        self.data = self.data['data']
+        new_data = []
+        for data in self.data:
+            for d in data['paragraphs']:
+                context = d['context']
+                for qa in d['qas']:
+                    new_data.append({
+                        'context':context,
+                        'answers':qa['answers'],
+                        'question':qa['question']
+                    })
+        
+        self.data = new_data
+        self.split_set = split_set
+        self.is_test = is_test
+        self.tokenizer = tokenizer
+        

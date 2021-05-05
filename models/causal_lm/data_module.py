@@ -159,7 +159,7 @@ class SquadNQGDataset(Dataset,DatasetUtilsMixin):
 
     
 
-class DrcdDataset(Dataset,DatasetUtilsMixin):
+class DrcdDataset(SquadNQGDataset):
     def __init__(self,split_set:str='train',tokenizer = get_tokenizer(args.base_model),is_test=False):
         """
         Args:
@@ -198,20 +198,3 @@ class DrcdDataset(Dataset,DatasetUtilsMixin):
         self.is_test = is_test
         self.tokenizer = tokenizer
         
-    def __getitem__(self,index):
-        data = self.data[index]
-        
-        answer_text = data['answers'][0]['text']
-        answer_len = len(answer_text)
-        answer_start = data['answers'][0]['answer_start']
-        hl_context = data['context'][:answer_start] + HL_TOKEN + answer_text + HL_TOKEN + data['context'][answer_start + answer_len:]
-
-        if self.is_test == False:
-            model_input = self.prepare_input(context=hl_context,label=data['question'] + self.tokenizer.eos_token)
-            return model_input['input_ids'],model_input['labels'] 
-        else:
-            model_input = self.prepare_input(context=hl_context)
-            return model_input['input_ids'],data['question']
-        
-    def __len__(self):
-        return len(self.data)
