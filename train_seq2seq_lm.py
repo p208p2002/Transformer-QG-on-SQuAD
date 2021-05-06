@@ -43,17 +43,17 @@ if __name__ == "__main__":
     if args.run_test == False:
         trainer.fit(model,datamodule=dm)
 
-    # decide which checkpoint to use
-    last_model_path = trainer.checkpoint_callback.last_model_path
-    best_model_path = trainer.checkpoint_callback.best_model_path
-    _use_model_path = last_model_path if best_model_path == "" else best_model_path
-    print('use checkpoint:',_use_model_path)
+    # # decide which checkpoint to use
+    # last_model_path = trainer.checkpoint_callback.last_model_path
+    # best_model_path = trainer.checkpoint_callback.best_model_path
+    # _use_model_path = last_model_path if best_model_path == "" else best_model_path
+    # print('use checkpoint:',_use_model_path)
 
     # run_test
     trainer.test(
-        model=model if _use_model_path == "" else None,
+        model=model,
         datamodule=dm,
-        ckpt_path=_use_model_path
+        # ckpt_path=_use_model_path
     )
         
     

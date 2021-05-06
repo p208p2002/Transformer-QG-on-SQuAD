@@ -33,11 +33,10 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
         #
         args = get_args()
         self.tokenizer = get_tokenizer(args.base_model)
-        # self.model = AutoModelForSeq2SeqLM.from_pretrained(args.base_model)
-        self.model = EncoderDecoderModel.from_encoder_decoder_pretrained('bert-base-chinese-hl/huggingface_model', "ckiplab/gpt2-base-chinese")
-        # self.model.resize_token_embeddings(len(self.tokenizer))
-        
+        self.model = EncoderDecoderModel.from_encoder_decoder_pretrained('bert-base-chinese-hl/huggingface_model', "gpt2-base-chinese-hl/huggingface_model")
         self._type = 'seq2seq_lm'
+        print(self.model.config.decoder)
+        # exit()
 
     def forward(self, input_ids,attention_mask,labels=None):
         decoder_input_ids = shift_tokens_right(
@@ -76,7 +75,8 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
             top_k=10,
             num_beams=3,
             no_repeat_ngram_size=5,
-            num_return_sequences=num_return_sequences
+            num_return_sequences=num_return_sequences,
+            eos_token_id=102
         )
 
         assert len(sample_outputs) == num_return_sequences # 1

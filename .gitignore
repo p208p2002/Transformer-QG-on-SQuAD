@@ -4,5 +4,5 @@ __py*/
 datasets/
 run_plan.sh
 nqg/
-gpt2-drcd-qg-hl/
 bert-base-chinese-hl/
+gpt2-base-chinese-hl/
