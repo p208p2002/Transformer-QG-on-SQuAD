@@ -40,6 +40,8 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
         self.log('dev_loss',loss)
         
     def test_step(self, batch, batch_idx):
+        self.save_huggingface_model()
+        exit()
         input_ids = batch[0]
         ref_question = batch[1][0]
         input_ids_len = input_ids.shape[-1]

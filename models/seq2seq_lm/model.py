@@ -1,5 +1,5 @@
 import pytorch_lightning as pl
-from transformers import AutoModelForSeq2SeqLM
+from transformers import AutoModelForSeq2SeqLM,EncoderDecoderModel
 from .tokenizer import get_tokenizer
 from .argparser import get_args
 import torch
@@ -12,6 +12,19 @@ from utils.server import ServerMixin
 from utils.scheduler import setup_scheduler,step_scheduler
 args = get_args()
 
+def shift_tokens_right(input_ids: torch.Tensor, pad_token_id: int, decoder_start_token_id: int):
+    """
+    Shift input ids one token to the right.
+    """
+    shifted_input_ids = input_ids.new_zeros(input_ids.shape)
+    shifted_input_ids[:, 1:] = input_ids[:, :-1].clone()
+    shifted_input_ids[:, 0] = decoder_start_token_id
+
+    assert pad_token_id is not None, "self.model.config.pad_token_id has to be defined."
+    # replace possible -100 values in labels by `pad_token_id`
+    shifted_input_ids.masked_fill_(shifted_input_ids == -100, pad_token_id)
+
+    return shifted_input_ids
 
 class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
     def __init__(self,args = args):
@@ -20,13 +33,17 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
         #
         args = get_args()
         self.tokenizer = get_tokenizer(args.base_model)
-        self.model = AutoModelForSeq2SeqLM.from_pretrained(args.base_model)
-        self.model.resize_token_embeddings(len(self.tokenizer))
+        # self.model = AutoModelForSeq2SeqLM.from_pretrained(args.base_model)
+        self.model = EncoderDecoderModel.from_encoder_decoder_pretrained('bert-base-chinese-hl/huggingface_model', "ckiplab/gpt2-base-chinese")
+        # self.model.resize_token_embeddings(len(self.tokenizer))
         
         self._type = 'seq2seq_lm'
 
     def forward(self, input_ids,attention_mask,labels=None):
-        return self.model(input_ids=input_ids,attention_mask=attention_mask,labels=labels,return_dict=True)
+        decoder_input_ids = shift_tokens_right(
+            labels, self.model.encoder.config.pad_token_id, self.model.decoder.config.bos_token_id
+        )
+        return self.model(input_ids=input_ids,decoder_input_ids=decoder_input_ids,attention_mask=attention_mask,labels=labels,return_dict=True)
     
     # @step_scheduler
     def training_step(self, batch, batch_idx):

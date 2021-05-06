@@ -51,7 +51,8 @@ if __name__ == "__main__":
 
     # run_test
     trainer.test(
-        model=model if _use_model_path == "" else None,
+        model,
+        # model=model if _use_model_path == "" else None,
         datamodule=dm,
         ckpt_path=_use_model_path
     )
