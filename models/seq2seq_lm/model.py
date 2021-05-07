@@ -33,7 +33,8 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
         #
         args = get_args()
         self.tokenizer = get_tokenizer(args.base_model)
-        self.model = EncoderDecoderModel.from_encoder_decoder_pretrained('bert-base-chinese-hl/huggingface_model', "gpt2-base-chinese-hl/huggingface_model")
+        # self.model = EncoderDecoderModel.from_encoder_decoder_pretrained('bert-base-chinese-hl/huggingface_model', "gpt2-base-chinese-hl/huggingface_model")
+        self.model = EncoderDecoderModel.from_pretrained(args.base_model)
         self._type = 'seq2seq_lm'
         print(self.model.config.decoder)
         # exit()

@@ -1,6 +1,7 @@
 from transformers import AutoModel,AutoModelForCausalLM
 from transformers import AutoTokenizer
 import os
+
 HL_TOKEN = '[HL]'
 def get_tokenizer(base_model):
     if 'tokenizer' not in globals():
