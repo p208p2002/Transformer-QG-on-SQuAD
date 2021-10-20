@@ -1,4 +1,4 @@
-# Transformer QG on SQuAD
+# Transformer QG on DRCD
 The inputs of the model refers to 
 ```
 we integrate C and A into a new C' in the following form.
@@ -11,44 +11,25 @@ C' = [c1, c2, ..., [HL], a1, ..., a|A|, [HL], ..., c|C|]
 - Support most of state of the art models
 - Fast deploy as a API server
 
-## Data setting
-We report two dataset setting as Follow
-
-### SQuAD
-- train: 87599	
-- validation: 10570
-> [SQuAD: 100,000+ Questions for Machine Comprehension of Text](https://arxiv.org/abs/1606.05250)
-
-### SQuAD NQG
-- train: 75722
-- dev: 10570
-- test: 11877
-> [Learning to Ask: Neural Question Generation for Reading Comprehension](https://arxiv.org/abs/1705.00106)
+## DRCD dataset
+[台達閱讀理解資料集 Delta Reading Comprehension Dataset (DRCD)](https://github.com/DRCKnowledgeTeam/DRCD) 屬於通用領域繁體中文機器閱讀理解資料集。 DRCD資料集從2,108篇維基條目中整理出10,014篇段落，並從段落中標註出30,000多個問題。
 
 ## Available models
-- BART
-- GPT2
-- T5
+- BART (base on **[uer/bart-base-chinese-cluecorpussmall](https://huggingface.co/uer/bart-base-chinese-cluecorpussmall)**)
+
+## Use in Transformers
+```python
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+  
+tokenizer = AutoTokenizer.from_pretrained("p208p2002/bart-drcd-qg-hl")
+
+model = AutoModelForSeq2SeqLM.from_pretrained("p208p2002/bart-drcd-qg-hl")
+```
 
 ## Expriments
-We report score with `NQG Scorer` which is using in SQuAD NQG.
-
-If not special explanation, the size of the model defaults to "base".
-
-### SQuAD
-Model                            |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
----------------------------------|------|------|------|------|------|-------|
-BART-HLSQG                       |54.67 |39.26 |30.34 |24.15 |25.43 |52.64  |
-GPT2-HLSQG                       |49.31 |33.95 |25.41| 19.69 |22.29 |48.82  |
-T5-HLSQG                         |54.29 |39.22 |30.43 |24.26 |25.56 |53.11  |
-
-### SQuAD NQG
-Model                            |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
----------------------------------|------|------|------|------|------|-------|
-BERT-HLSQG (Chan et al.)         |49.73 |34.60 |26.13 |20.33 |23.88 |48.23  |
-BART-HLSQG                       |54.12 |38.19 |28.84 |22.35 |24.55 |51.03  |
-GPT2-HLSQG                       |49.82 |33.69 |24.71 |18.63 |21.90 |47.60  |
-T5-HLSQG                         |53.13 |37.60 |28.62 |22.38 |24.48 |51.20  |
+Model             |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
+------------------|------|------|------|------|------|-------|
+BART-HLSQG        |34.25 |27.70 |22.43 |18.13 |23.58 |36.88  |
 
 ## Environment requirements
 The hole development is based on Ubuntu system
@@ -84,36 +65,18 @@ optional arguments:
   -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
 ```
 
-### Causal LM
-```
-usage: train_causal_lm.py [-h] [--base_model {gpt2,gpt2-large}]
-                          [-d {squad,squad-nqg}] [--epoch EPOCH] [--lr LR]
-                          [--dev DEV] [--server] [--run_test]
-                          [-fc FROM_CHECKPOINT]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --base_model {gpt2,gpt2-large}
-  -d {squad,squad-nqg}, --dataset {squad,squad-nqg}
-  --epoch EPOCH
-  --lr LR
-  --dev DEV
-  --server
-  --run_test
-  -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
-```
-
 ## Deploy
 ### Start up
 ```
-python train_xxx_lm.py --server --base_model YOUR_BASE_MODEL --from_checkpoint FROM_CHECKPOINT
+python train_seq2seq_lm.py --server --base_model YOUR_BASE_MODEL --from_checkpoint FROM_CHECKPOINT
 ```
 ### Request example
 ```
 curl --location --request POST 'http://127.0.0.1:5000/' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'context=Harry Potter is a series of seven fantasy novels written by [HL] J. K. Rowling. [HL]'
+--data-urlencode 'context=哈利·波特是英國作家[HL]羅琳[HL]撰寫的七部幻想小說系列'
 ```
 ```json
-{"predict": "Who wrote the books?"}
+{"predict": "誰撰寫哈利·波特?"}
 ```
+
