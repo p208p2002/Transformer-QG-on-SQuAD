@@ -34,16 +34,17 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
         args = get_args()
         self.tokenizer = get_tokenizer(args.base_model)
         # self.model = EncoderDecoderModel.from_encoder_decoder_pretrained('bert-base-chinese-hl/huggingface_model', "gpt2-base-chinese-hl/huggingface_model")
-        self.model = EncoderDecoderModel.from_pretrained(args.base_model)
+        # self.model = EncoderDecoderModel.from_pretrained(args.base_model)
+        self.model = AutoModelForSeq2SeqLM.from_pretrained(args.base_model)
         self._type = 'seq2seq_lm'
-        print(self.model.config.decoder)
+        # print(self.model.config.decoder)
         # exit()
 
     def forward(self, input_ids,attention_mask,labels=None):
-        decoder_input_ids = shift_tokens_right(
-            labels, self.model.encoder.config.pad_token_id, self.model.decoder.config.bos_token_id
-        )
-        return self.model(input_ids=input_ids,decoder_input_ids=decoder_input_ids,attention_mask=attention_mask,labels=labels,return_dict=True)
+        # decoder_input_ids = shift_tokens_right(
+        #     labels, self.model.encoder.config.pad_token_id, self.model.decoder.config.bos_token_id
+        # )
+        return self.model(input_ids=input_ids,attention_mask=attention_mask,labels=labels,return_dict=True)
     
     # @step_scheduler
     def training_step(self, batch, batch_idx):
