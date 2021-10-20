@@ -13,7 +13,7 @@ class ModelEvalMixin():
 
         # write log for my scorer
         with open(os.path.join(log_dir,'predict.jsonl'),'a',encoding='utf-8') as log_f:
-            log_f.write(json.dumps({"hyp":decode_question,"ref":ref_question},ensure_ascii=False)+"\n")
+            log_f.write(json.dumps({"hyp":decode_question.replace("?","？"),"ref":' '.join(ref_question)},ensure_ascii=False)+"\n")
 
         # write log for nqg scorer
         with open(os.path.join(log_dir,'predict_for_nqg_scorer.txt'),'a',encoding='utf-8') as log_f:
