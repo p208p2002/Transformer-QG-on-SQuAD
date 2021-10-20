@@ -30,6 +30,26 @@ We report two dataset setting as Follow
 - GPT2
 - T5
 
+## Use in Transformers
+#### bart-squad-qg-hl
+```python
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+  
+tokenizer = AutoTokenizer.from_pretrained("p208p2002/bart-squad-qg-hl")
+
+model = AutoModelForSeq2SeqLM.from_pretrained("p208p2002/bart-squad-qg-hl")
+```
+#### t5-squad-qg-hl
+```python
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+  
+tokenizer = AutoTokenizer.from_pretrained("p208p2002/t5-squad-qg-hl")
+
+model = AutoModelForSeq2SeqLM.from_pretrained("p208p2002/t5-squad-qg-hl")
+```
+
+and more on [HF Model Hub](https://huggingface.co/p208p2002)!
+
 ## Expriments
 We report score with `NQG Scorer` which is using in SQuAD NQG.
 
