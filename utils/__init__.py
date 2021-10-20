@@ -14,21 +14,6 @@ class ModelEvalMixin():
         # write log for my scorer
         with open(os.path.join(log_dir,'predict.jsonl'),'a',encoding='utf-8') as log_f:
             log_f.write(json.dumps({"hyp":decode_question.replace("?","？"),"ref":' '.join(ref_question)},ensure_ascii=False)+"\n")
-
-        # write log for nqg scorer
-        with open(os.path.join(log_dir,'predict_for_nqg_scorer.txt'),'a',encoding='utf-8') as log_f:
-            decode_question = decode_question.lower()
-            decode_question = decode_question.replace("?"," ?")
-            decode_question = decode_question.replace(","," ,")
-            decode_question = decode_question.replace("'s"," 's")
-            decode_question = decode_question.replace("..."," ...")
-            
-            # replace string: "hello" world -> `` hello '' world
-            decode_question = re.sub(' "','``',decode_question)
-            decode_question = re.sub('"',"''",decode_question)
-            decode_question = decode_question.replace('``',' `` ')
-            decode_question = decode_question.replace("''"," ''")
-            log_f.write(decode_question+"\n")
         
     def evaluate_predict(self,dataset):
         scorer = Scorer()
@@ -43,15 +28,6 @@ class ModelEvalMixin():
                 ref = line['ref']
                 scorer.add(hyp,[ref])
             scorer.compute(save_score_report_path=log_dir)
-        
-        # ngq scorer
-        assert os.path.isdir('nqg'),'nqg scorer is not detect, please check "README.md" for help'
-        nqg_predict_file_path = os.path.join(log_dir,'predict_for_nqg_scorer.txt')
-        nqg_predict_score_out_path = os.path.join(log_dir,'nqg_scorer.txt')
-        if dataset == 'squad-nqg':
-            os.system('python nqg/qgevalcap/eval.py --src nqg/data/processed/src-test.txt --tgt nqg/data/processed/tgt-test.txt --out %s >> %s'%(nqg_predict_file_path,nqg_predict_score_out_path))
-        elif dataset == 'squad':
-            os.system('python nqg/qgevalcap/eval.py --src nqg/data/processed/src-dev.txt --tgt nqg/data/processed/tgt-dev.txt --out %s >> %s'%(nqg_predict_file_path,nqg_predict_score_out_path))
         
         print("see log_dir:`%s` for full report"%log_dir)
     
