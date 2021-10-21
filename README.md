@@ -87,14 +87,14 @@ The hole development is based on Ubuntu system
 ### Seq2Seq LM
 ```
 usage: train_seq2seq_lm.py [-h]
-                           [--base_model {facebook/bart-base,facebook/bart-large,t5-small,t5-base,t5-large}]
+                           [--base_model {facebook/bart-base,facebook/bart-large,t5-small,t5-base,t5-large,p208p2002/bart-squad-qg-hl,p208p2002/bart-squad-nqg-hl,p208p2002/t5-squad-qg-hl,p208p2002/t5-squad-nqg-hl}]
                            [-d {squad,squad-nqg}] [--epoch EPOCH] [--lr LR]
                            [--dev DEV] [--server] [--run_test]
                            [-fc FROM_CHECKPOINT]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --base_model {facebook/bart-base,facebook/bart-large,t5-small,t5-base,t5-large}
+  --base_model {facebook/bart-base,facebook/bart-large,t5-small,t5-base,t5-large,p208p2002/bart-squad-qg-hl,p208p2002/bart-squad-nqg-hl,p208p2002/t5-squad-qg-hl,p208p2002/t5-squad-nqg-hl}
   -d {squad,squad-nqg}, --dataset {squad,squad-nqg}
   --epoch EPOCH
   --lr LR
@@ -106,14 +106,15 @@ optional arguments:
 
 ### Causal LM
 ```
-usage: train_causal_lm.py [-h] [--base_model {gpt2,gpt2-large}]
+usage: train_causal_lm.py [-h]
+                          [--base_model {gpt2,gpt2-large,p208p2002/gpt2-squad-qg-hl,p208p2002/gpt2-squad-nqg-hl}]
                           [-d {squad,squad-nqg}] [--epoch EPOCH] [--lr LR]
                           [--dev DEV] [--server] [--run_test]
                           [-fc FROM_CHECKPOINT]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --base_model {gpt2,gpt2-large}
+  --base_model {gpt2,gpt2-large,p208p2002/gpt2-squad-qg-hl,p208p2002/gpt2-squad-nqg-hl}
   -d {squad,squad-nqg}, --dataset {squad,squad-nqg}
   --epoch EPOCH
   --lr LR
@@ -124,12 +125,16 @@ optional arguments:
 ```
 
 ## Deploy
-### Start up
+### From pre-trained (recommend)
+```sh
+python train_seq2seq_lm.py --server --base_model p208p2002/bart-squad-qg-hl
 ```
+### From your own checkpoint
+```sh
 python train_xxx_lm.py --server --base_model YOUR_BASE_MODEL --from_checkpoint FROM_CHECKPOINT
 ```
 ### Request example
-```
+```sh
 curl --location --request POST 'http://127.0.0.1:5000/' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'context=Harry Potter is a series of seven fantasy novels written by [HL] J. K. Rowling. [HL]'
