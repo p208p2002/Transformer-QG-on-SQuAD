@@ -124,7 +124,7 @@ optional arguments:
   -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
 ```
 
-## Deploy
+## Run as API server
 ### From pre-trained (recommend)
 ```sh
 python train_seq2seq_lm.py --server --base_model p208p2002/bart-squad-qg-hl
