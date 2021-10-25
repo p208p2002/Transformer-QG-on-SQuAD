@@ -4,3 +4,4 @@ __py*/
 datasets/
 run_plan.sh
 nqg/
+.DS_Store
