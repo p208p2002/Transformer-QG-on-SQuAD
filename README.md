@@ -75,7 +75,7 @@ and more on [HF Model Hub](https://huggingface.co/p208p2002)!
 ## Run as API server
 ### Using docker (recommend)
 ```sh
-docker run -it -p 5000:5000  p208p2002/Transformer-QG-on-SQuAD train_seq2seq_lm.py --server p208p2002/bart-squad-qg-hl
+docker run -it -p 5000:5000  p208p2002/transformer-qg-on-squad train_seq2seq_lm.py --server p208p2002/bart-squad-qg-hl
 ```
 > comming soon
 ### From your own checkpoint
