@@ -1,14 +1,14 @@
 # Transformer QG on SQuAD [![Auto-Build](https://github.com/p208p2002/Transformer-QG-on-SQuAD/actions/workflows/main.yml/badge.svg)](https://github.com/p208p2002/Transformer-QG-on-SQuAD/actions/workflows/main.yml)
 <span>
-<a href="https://github.com/p208p2002/Transformer-QG-on-SQuAD">
+<a target="_blank" href="https://github.com/p208p2002/Transformer-QG-on-SQuAD">
 <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white">
 </a>
 
-<a href="https://hub.docker.com/repository/docker/p208p2002/transformer-qg-on-squad">
+<a target="_blank" href="https://hub.docker.com/repository/docker/p208p2002/transformer-qg-on-squad">
 <img src="https://img.shields.io/badge/Docker Hub-2CA5E0?style=for-the-badge&logo=docker&logoColor=white">
 </a>
 
-<a href="https://huggingface.co/p208p2002/bart-squad-qg-hl">
+<a target="_blank" href="https://huggingface.co/p208p2002/bart-squad-qg-hl">
 <img src="https://img.shields.io/badge/🤗 HF Model Hub-ffea00?style=for-the-badge&logoColor=white">
 </a>
 </span>
