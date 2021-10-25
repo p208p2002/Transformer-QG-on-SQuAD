@@ -25,7 +25,6 @@ jobs:
         with:
           username: p208p2002
           password: ${{ secrets.DOCKER_HUB_PWD }}
-      - name: Build
-        run: export DOCKER_BUILDKIT=1 && docker build -t=p208p2002/transformer-qg-on-squad:lastest .
-      - name: Push Lastest
-        run: docker push p208p2002/transformer-qg-on-squad:lastest
+      - name: Build and Push
+        run: docker buildx build --platform linux/arm64,linux/amd64 -t=p208p2002/transformer-qg-on-squad:lastest . --push
+      
