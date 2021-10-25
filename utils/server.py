@@ -3,6 +3,7 @@ import json
 from flask import request
 from flask.json import jsonify
 from utils import MaskedLMGenerator
+from flask_cors import CORS
 
 class ServerMixin():
     def run_server(self,max_context_length = 400,max_question_length=32,port=5000):
@@ -15,6 +16,8 @@ class ServerMixin():
             assert False,'_type match fail'
 
         self.flask = Flask(__name__)
+        CORS(self.flask)
+        
         # add route
         @self.flask.route('/')
         def index():
@@ -53,4 +56,4 @@ class ServerMixin():
                 
                 return jsonify({"predict":decode_question})
 
-        self.flask.run(port=port)
+        self.flask.run(port=port,host='0.0.0.0')

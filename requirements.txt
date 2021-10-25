@@ -5,3 +5,4 @@ Flask
 stanza
 git+https://github.com/voidful/nlg-eval.git@master
 loguru
+flask-cors
