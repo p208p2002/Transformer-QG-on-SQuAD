@@ -1,4 +1,13 @@
-# Transformer QG on SQuAD
+# Transformer QG on SQuAD [![Auto-Build](https://github.com/p208p2002/Transformer-QG-on-SQuAD/actions/workflows/main.yml/badge.svg)](https://github.com/p208p2002/Transformer-QG-on-SQuAD/actions/workflows/main.yml)
+
+<span>
+<img src="https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white">
+<img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" /> 
+<img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=PyTorch&logoColor=white">
+<img src="https://img.shields.io/badge/PyTorch Lightning-792EE5?style=for-the-badge&logo=PyTorch Lightning&logoColor=white">
+<img src="https://img.shields.io/badge/🤗Transformers-ffea00?style=for-the-badge&logoColor=white">
+</span>
+
 The inputs of the model refers to 
 ```
 we integrate C and A into a new C' in the following form.
