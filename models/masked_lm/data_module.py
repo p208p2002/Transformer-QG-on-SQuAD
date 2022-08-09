@@ -67,17 +67,17 @@ class DatasetUtilsMixin():
 
         input_ids = context_encoding+model_input_encodeing
         labels = label_encoding
-        token_type_ids = [0]*len(context_encoding) + [1]*len(model_input_encodeing)
+        # token_type_ids = [0]*len(context_encoding) + [1]*len(model_input_encodeing)
 
         # pad
         while len(input_ids)<MAX_INPUT_LENGTH:
             input_ids.append(self.tokenizer.pad_token_id)
             labels.append(-100)
-            token_type_ids.append(1)
+            # token_type_ids.append(1)
 
         return self.convert_to_tensor({
             'input_ids':input_ids,
-            'token_type_ids':token_type_ids,
+            # 'token_type_ids':token_type_ids,
             'labels':labels
         })
 
@@ -127,13 +127,9 @@ class SquadQGDataset(Dataset,DatasetUtilsMixin):
                     label=data['question'] + self.tokenizer.sep_token,
                     question_mask_position=question_mask_position
                 )
-            if re.match("bert-",args.base_model):
-                return model_input['input_ids'],model_input['labels'],model_input['token_type_ids']
             return model_input['input_ids'],model_input['labels']
         else:
             model_input = self.prepare_input(context=hl_context)
-            if re.match("bert-",args.base_model):
-                return model_input['input_ids'],data['question'],model_input['token_type_ids']
             return model_input['input_ids'],data['question']
         
     def __len__(self):
@@ -209,13 +205,9 @@ class SquadNQGDataset(Dataset,DatasetUtilsMixin):
                     label=data['question'] + self.tokenizer.sep_token,
                     question_mask_position=question_mask_position
                 )
-            if re.match("bert-",args.base_model):
-                return model_input['input_ids'],model_input['labels'],model_input['token_type_ids']
             return model_input['input_ids'],model_input['labels']
         else:
             model_input = self.prepare_input(context=hl_context)
-            if re.match("bert-",args.base_model):
-                return model_input['input_ids'],data['question'],model_input['token_type_ids']
             return model_input['input_ids'],data['question']
         
     def __len__(self):

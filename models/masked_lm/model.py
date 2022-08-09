@@ -20,31 +20,20 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
         self.model.resize_token_embeddings(len(self.tokenizer))
 
         self._type = 'masked_lm'
-        self.is_bert = re.match("bert-",args.base_model)
 
-    def forward(self, input_ids,labels=None,token_type_ids=None):
-        # print(self.tokenizer.batch_decode(input_ids))
-
-        if self.is_bert:
-            assert token_type_ids is not None
-            return self.model(input_ids=input_ids,labels=labels,token_type_ids=token_type_ids,return_dict=True)
+    def forward(self, input_ids,labels=None):
         return self.model(input_ids=input_ids,labels=labels,return_dict=True)
     
     def training_step(self, batch, batch_idx):
         
-        if self.is_bert:
-            outputs = self(batch[0],batch[1],batch[2])
-        else:
-            outputs = self(batch[0],batch[1])
+       
+        outputs = self(batch[0],batch[1])
         loss = outputs['loss']
 
         return loss
         
     def validation_step(self, batch, batch_idx):
-        if self.is_bert:
-            outputs = self(batch[0],batch[1],batch[2])
-        else:
-            outputs = self(batch[0],batch[1])
+        outputs = self(batch[0],batch[1])
         loss = outputs['loss']
         self.log('dev_loss',loss)
         

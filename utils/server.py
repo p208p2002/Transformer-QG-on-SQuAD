@@ -2,7 +2,7 @@ from flask import Flask
 import json
 from flask import request
 from flask.json import jsonify
-from utils import MaskedLMGenerator
+from utils.decoder import BeamSearchForMaskedLM
 from flask_cors import CORS
 
 class ServerMixin():
@@ -51,8 +51,8 @@ class ServerMixin():
                 return jsonify({"predict":decode_question})
             
             elif self._type in ['masked_lm']:
-                generator = MaskedLMGenerator(self.model,self.tokenizer)
-                decode_question = generator.generate(model_input['input_ids'])
+                generator = BeamSearchForMaskedLM(self.model,self.tokenizer)
+                decode_question = generator(model_input['input_ids'])
                 
                 return jsonify({"predict":decode_question})
 
