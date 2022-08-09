@@ -13,6 +13,8 @@
 </a>
 </span>
 
+Implement Question Generator with SOTA pre-trained Language Model (RoBERTa, BERT, GPT, BART, T5, etc.)
+
 The inputs of the model refers to 
 ```
 we integrate C and A into a new C' in the following form.
@@ -44,6 +46,8 @@ We report two dataset setting as Follow
 - BART
 - GPT2
 - T5
+- BERT (comming soon)
+- RoBERTa (comming soon)
 
 ### Expriments
 We report score with `NQG Scorer` which is using in SQuAD NQG.
@@ -150,6 +154,27 @@ usage: train_causal_lm.py [-h]
 optional arguments:
   -h, --help            show this help message and exit
   --base_model {gpt2,gpt2-large,p208p2002/gpt2-squad-qg-hl,p208p2002/gpt2-squad-nqg-hl}
+  -d {squad,squad-nqg}, --dataset {squad,squad-nqg}
+  --epoch EPOCH
+  --lr LR
+  --dev DEV
+  --server
+  --run_test
+  -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
+```
+
+
+### Masked LM
+```
+usage: train_masked_lm.py [-h]
+                          [--base_model {bert-base-uncased,bert-large-uncased,roberta-base,roberta-large,albert-base-v1,albert-large-v1,albert-base-v2,albert-large-v2}]
+                          [--batch_size BATCH_SIZE] [-d {squad,squad-nqg}] [--epoch EPOCH]
+                          [--lr LR] [--dev DEV] [--server] [--run_test] [-fc FROM_CHECKPOINT]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --base_model {bert-base-uncased,bert-large-uncased,roberta-base,roberta-large,albert-base-v1,albert-large-v1,albert-base-v2,albert-large-v2}
+  --batch_size BATCH_SIZE
   -d {squad,squad-nqg}, --dataset {squad,squad-nqg}
   --epoch EPOCH
   --lr LR
