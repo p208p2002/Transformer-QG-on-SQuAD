@@ -13,7 +13,7 @@
 </a>
 </span>
 
-Implement Question Generator with SOTA pre-trained Language Model (RoBERTa, BERT, GPT, BART, T5, etc.)
+Implement Question Generator with SOTA pre-trained Language Models (RoBERTa, BERT, GPT, BART, T5, etc.)
 
 The inputs of the model refers to 
 ```
