@@ -114,7 +114,7 @@ curl --location --request POST 'http://127.0.0.1:5000/' \
 ### Environment setup
 The hole development is based on Ubuntu system
 
-1. If you don't have pytorch 1.6+ please install or update first
+1. If you don't have pytorch please install or update first (version torch>=1.6,<1.8)
 > https://pytorch.org/get-started/locally/
 
 2. Install packages `pip install -r requirements.txt`

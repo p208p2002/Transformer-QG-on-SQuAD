@@ -25,11 +25,9 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
         return self.model(input_ids=input_ids,labels=labels,return_dict=True)
     
     def training_step(self, batch, batch_idx):
-        
-       
         outputs = self(batch[0],batch[1])
         loss = outputs['loss']
-
+        self.log('train_loss',loss)
         return loss
         
     def validation_step(self, batch, batch_idx):
@@ -47,12 +45,12 @@ class Model(pl.LightningModule,ModelEvalMixin,ServerMixin):
         decoder = BeamSearchForMaskedLM(self.model,self.tokenizer,beam_size=3,max_token_length=450,device='cuda')
         decode_question = decoder(input_ids)
         print(decode_question)
-        
         self.write_predict(decode_question,ref_question)
 
     def test_epoch_end(self,outputs):
         self.evaluate_predict(dataset=args.dataset)
-    
+        self.save_huggingface_model()
+
     def configure_optimizers(self):
         opt = torch.optim.AdamW(self.parameters(), lr=args.lr)
         opt.zero_grad()
