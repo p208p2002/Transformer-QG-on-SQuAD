@@ -46,8 +46,8 @@ We report two dataset setting as Follow
 - BART
 - GPT2
 - T5
-- BERT (comming soon)
-- RoBERTa (comming soon)
+- BERT
+- RoBERTa
 
 ### Expriments
 We report score with `NQG Scorer` which is using in SQuAD NQG.
@@ -57,6 +57,7 @@ If not special explanation, the size of the model defaults to "base".
 ### SQuAD
 Model                            |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
 ---------------------------------|------|------|------|------|------|-------|
+BERT-HLSQG (reimplement, FP16)   |51.11 |34.73 |25.66 |19.56 |22.77 |47.91  |
 BART-HLSQG                       |54.67 |39.26 |30.34 |24.15 |25.43 |52.64  |
 GPT2-HLSQG                       |49.31 |33.95 |25.41| 19.69 |22.29 |48.82  |
 T5-HLSQG                         |54.29 |39.22 |30.43 |24.26 |25.56 |53.11  |
@@ -65,6 +66,7 @@ T5-HLSQG                         |54.29 |39.22 |30.43 |24.26 |25.56 |53.11  |
 Model                            |Bleu 1|Bleu 2|Bleu 3|Bleu 4|METEOR|ROUGE-L|
 ---------------------------------|------|------|------|------|------|-------|
 BERT-HLSQG (Chan et al.)         |49.73 |34.60 |26.13 |20.33 |23.88 |48.23  |
+BERT-HLSQG (reimplement, FP16)   |50.48 |33.82 | 24.52|18.36 |22.11 |47.01  |
 BART-HLSQG                       |54.12 |38.19 |28.84 |22.35 |24.55 |51.03  |
 GPT2-HLSQG                       |49.82 |33.69 |24.71 |18.63 |21.90 |47.60  |
 T5-HLSQG                         |53.13 |37.60 |28.62 |22.38 |24.48 |51.20  |
@@ -114,7 +116,7 @@ curl --location --request POST 'http://127.0.0.1:5000/' \
 ### Environment setup
 The hole development is based on Ubuntu system
 
-1. If you don't have pytorch please install or update first (version torch>=1.6,<1.8)
+1. If you don't have pytorch please install or update first (torch>=1.6,<1.8)
 > https://pytorch.org/get-started/locally/
 
 2. Install packages `pip install -r requirements.txt`
@@ -166,10 +168,8 @@ optional arguments:
 
 ### Masked LM
 ```
-usage: train_masked_lm.py [-h]
-                          [--base_model {bert-base-uncased,bert-large-uncased,roberta-base,roberta-large,albert-base-v1,albert-large-v1,albert-base-v2,albert-large-v2}]
-                          [--batch_size BATCH_SIZE] [-d {squad,squad-nqg}] [--epoch EPOCH]
-                          [--lr LR] [--dev DEV] [--server] [--run_test] [-fc FROM_CHECKPOINT]
+usage: train_masked_lm.py [-h] [--base_model {bert-base-uncased,bert-large-uncased,roberta-base,roberta-large,albert-base-v1,albert-large-v1,albert-base-v2,albert-large-v2}]
+                          [--batch_size BATCH_SIZE] [-d {squad,squad-nqg}] [--epoch EPOCH] [--lr LR] [--dev DEV] [--server] [--run_test] [-fc FROM_CHECKPOINT] [--precision {16,32}]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -182,4 +182,5 @@ optional arguments:
   --server
   --run_test
   -fc FROM_CHECKPOINT, --from_checkpoint FROM_CHECKPOINT
+  --precision {16,32}, -fp {16,32}
 ```
